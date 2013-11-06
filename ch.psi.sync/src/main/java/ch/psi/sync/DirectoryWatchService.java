@@ -1,4 +1,5 @@
 package ch.psi.sync;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -89,6 +90,17 @@ public class DirectoryWatchService {
     		}
     	}
     	
+    	File file = new File(directory);
+    	if(!file.exists()){
+    		throw new IllegalArgumentException("Specified directory ["+directory+"] does not exist.");
+    	}
+    	if(!file.isDirectory()){
+    		throw new IllegalArgumentException("Specified directory ["+directory+"] does not exist");
+    	}
+    	
+    	
+    	logger.info("Watching '"+directory +"' for file pattern '"+pattern+"'"  );
+    	
     	final BlockingQueue<Path> q = new ArrayBlockingQueue<>(50);
         DirectoryWatchService watch = new DirectoryWatchService(q);
 
@@ -98,7 +110,7 @@ public class DirectoryWatchService {
 			public void run() {
 				while(true){
 					try {
-						System.out.println("Process "+q.take()+" ...");
+						logger.info("Process "+q.take()+" ...");
 					} catch (InterruptedException e) {
 						logger.finest("Process got interrupted");
 						break;
