@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<style>
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+</style>
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="css/main.css">
+
+<script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script src="js/jquery-2.0.0.min.js"></script>
+<script type='text/javascript'>
+	var base = '../hub';
+	var stream;
+
+	function getVersion() {
+		$.get(base+'/version', function(data) {
+			$('#version').empty();
+			$('#version').append(data)
+		});
+	}
+	
+	function getBeamlines() {
+		$.get(base, function(data) {
+			/* update beamlines selection */
+			
+			$('#selectionBeamline').empty();
+			for (var i in data){
+				beamline = data[i];
+				$('#selectionBeamline').append('<option value="'+beamline+'">'+beamline+'</option>')
+			}
+			/* $('#selectionBeamline')[0].selectedIndex=0; */
+			connectStream(data[0]);
+		});
+	}
+	
+	function updateKeys(beamline, keys){
+		keytag = $('#beamlineKeys');
+		keytag.empty();
+		table='<table class="table table-hover"><thead><tr><td>Key</td><td>Value</td></tr></thead><tbody>';
+		
+		for(k in keys){
+			table=table+'<tr><td>'+k+'</td><td>'+
+			'<div class="input-append">'+
+			'<input type="text" value="'+keys[k]+'" onchange="setKey(\''+beamline+'\',\''+k+'\',$(this).val())">'+
+			//'<button class="btn" type="button" onclick="setKey(\''+beamline+'\',\''+k+'\',$(this).prev().val())">Update</button>'+
+			'<button class="btn" type="button" onclick="deleteKey(\''+beamline+'\',\''+k+'\')">Delete</button>'+
+			'</div>'+
+			'</td></tr>';
+		}
+		
+		table = table+'<tr>'+
+			'<td><input id="keyToAdd" type="text" placeholder="Key"></td>'+
+			'<td><div class="input-append">'+
+			'<input id="valueToAdd"type="text" placeholder="Value">'+
+			'<button class="btn" type="button" onclick="setKey(\''+beamline+'\',$(\'#keyToAdd\').val(),$(\'#valueToAdd\').val())">Add</button>'+
+			'</div></td>'+
+			'</tr>';
+		
+		table = table+'</table></tbody>';
+		keytag.append(table);
+	}
+
+	function connectStream(beamline) {
+		closeStream();
+		stream = new EventSource(base + '/' + beamline + '/stream');
+		stream.onmessage = function(event) {
+			keys=JSON.parse(event.data)
+			updateKeys(beamline, keys);
+			
+		};
+		getKeys(beamline);
+	}
+
+	function closeStream() {
+		try {
+			stream.close();
+		} catch (e) {
+		}
+	}
+	
+	function getKeys(beamline){
+		$.get(base+'/'+beamline+'/keys', function(data) {
+			updateKeys(beamline, data );
+		});
+	}
+	
+	function setKey(beamline, key, value){
+		$.ajax({
+		    url: base+'/'+beamline+'/keys/'+key,
+		    type: 'PUT',
+		    data: value,
+		    success: function(result) {
+		    }
+		});
+	}
+	
+	function deleteKey(beamline, key){
+		$.ajax({
+		    url: base+'/'+beamline+'/keys/'+key,
+		    type: 'DELETE',
+		    success: function(result) {
+		    }
+		});
+	}
+	
+	function addBeamline(beamline){
+		getKeys(beamline); /*create beamline*/
+		getBeamlines();
+	}
+	
+	function deleteBeamline(beamline){
+		$.ajax({
+		    url: base+'/'+beamline,
+		    type: 'DELETE',
+		    success: function(result) {
+		    	getBeamlines(); /* Update beamline list */
+		    }
+		});
+		
+	}
+	
+</script>
+</head>
+<body>
+	<!-- <script>
+        var source = new EventSource('../server-sent-events/');
+        source.onmessage = function(e) {
+        	$('#messagefield') = e.data;
+        };
+        </script> -->
+
+	<!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+	<!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span>
+				</a> <a class="brand" href="#">hub</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+
+		<!-- Main hero unit for a primary marketing message or call to action -->
+		<!-- <div class="hero-unit">
+			<p>This is the central Hub administration page ...</p>
+		</div> -->
+
+		<!-- Example row of columns -->
+		<div class="row">
+			<div class="span5">
+				<h2>Key Group</h2>
+				<div>
+					<select id="selectionBeamline">
+						<!-- <option value="sydney">Sydney</option> -->
+					</select>
+				</div>
+				<div id="beamlineKeys"></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span5">
+				<h2>Key Group Management</h2>
+				<div class="input-append">
+					  <input class="span2" id="appendedInputButton" placeholder="Key Group" type="text">
+					  <button id="addBeamlineBtn" class="btn" type="button" onclick="addBeamline($(this).prev().val());$(this).prev().val('')">Add</button>
+					  <button id="addBeamlineBtn" class="btn" type="button" onclick="deleteBeamline($(this).prev().prev().val());$(this).prev().prev().val('')">Delete</button>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<footer>
+			<p>Hub - Version <span id='version'></span> - &copy; Paul Scherrer Institute 2013</p>
+		</footer>
+
+	</div>
+	<!-- /container -->
+
+	<script>
+		/* update beamlines */
+		getVersion();
+		getBeamlines();
+		$('#selectionBeamline').change(function(){connectStream($('#selectionBeamline').val())});
+	</script>
+
+	
+	<script>
+		window.jQuery
+				|| document
+						.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')
+	</script>
+
+	<script src="js/vendor/bootstrap.min.js"></script>
+
+	<script src="js/main.js"></script>
+</body>
+</html>

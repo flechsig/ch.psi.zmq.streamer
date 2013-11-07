@@ -18,22 +18,43 @@
  */
 package ch.psi.sync;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import java.nio.file.FileSystems;
 
-@Path("/")
-public class SyncService {
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-	@GET
-    @Path("version")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getVersion(){
-    	String version = getClass().getPackage().getImplementationVersion();
-    	if(version==null){
-    		version="0.0.0";
-    	}
-    	return version;
-    }
+import com.google.common.eventbus.EventBus;
+
+/**
+ * @author ebner
+ *
+ */
+public class FileSenderTest {
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+	}
+
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public void test() {
+		EventBus bus = new EventBus();
+        final FileSender sender = new FileSender();
+        bus.register(sender);
+        
+        sender.start(9998);
+        
+        bus.post(FileSystems.getDefault().getPath(".","a.txt"));
+	}
+
 }

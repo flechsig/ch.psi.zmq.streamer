@@ -1,30 +1,39 @@
 package ch.psi.sync;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.logging.Logger;
 
-public class DirectoryWatchService {
+import javax.inject.Inject;
+
+import com.google.common.eventbus.EventBus;
+
+public class DirectoryWatchDog {
 	
-	private static final Logger logger = Logger.getLogger(DirectoryWatchService.class.getName());
+	private static final Logger logger = Logger.getLogger(DirectoryWatchDog.class.getName());
 	
 	private volatile boolean watch = true;
-	private BlockingQueue<Path> queue;
+	private EventBus ebus;
 
-	public DirectoryWatchService(BlockingQueue<Path> queue){
-		this.queue = queue;
+	@Inject
+	public DirectoryWatchDog(EventBus ebus){
+		this.ebus = ebus;
 	}
 	
+	/**
+	 * Watch a given path (i.e. directory) for new files which match a given pattern
+	 * 
+	 * @param path		Directory to watch
+	 * @param pattern	Glob or regex pattern the filename has to match. Examples: glob:* , regex:.*
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
     public void watch(Path path, String pattern) throws IOException, InterruptedException {
     	watch=true;
         try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
@@ -58,7 +67,7 @@ public class DirectoryWatchService {
                     logger.finest(kind + " -> " + filename);
 
                     if(matcher.matches(filename)){
-                    	queue.add(path.resolve(filename));
+                    	ebus.post(path.resolve(filename));
                     }
                 }
 
@@ -77,55 +86,4 @@ public class DirectoryWatchService {
     	watch=false;
     }
 
-    
-    public static void main(String[] args) {
-
-    	String directory = ".";
-    	String pattern = "glob:*";
-    	
-    	if(args.length>0){
-    		directory = args[0];
-    		if(args.length>1){
-    			pattern = args[1];
-    		}
-    	}
-    	
-    	File file = new File(directory);
-    	if(!file.exists()){
-    		throw new IllegalArgumentException("Specified directory ["+directory+"] does not exist.");
-    	}
-    	if(!file.isDirectory()){
-    		throw new IllegalArgumentException("Specified directory ["+directory+"] does not exist");
-    	}
-    	
-    	
-    	logger.info("Watching '"+directory +"' for file pattern '"+pattern+"'"  );
-    	
-    	final BlockingQueue<Path> q = new ArrayBlockingQueue<>(50);
-        DirectoryWatchService watch = new DirectoryWatchService(q);
-
-        
-        new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while(true){
-					try {
-						logger.info("Process "+q.take()+" ...");
-					} catch (InterruptedException e) {
-						logger.finest("Process got interrupted");
-						break;
-					}
-				}
-				
-			}
-		}).start();
-        
-        
-        try {
-            watch.watch(Paths.get(directory), pattern);
-        } catch (IOException | InterruptedException ex) {
-            System.err.println(ex);
-        }
-
-    }
 }

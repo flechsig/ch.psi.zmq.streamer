@@ -24,9 +24,9 @@ import org.glassfish.grizzly.http.server.StaticHttpHandler;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
-public class SyncServer {
+public class StreamServer {
 	
-	private static final Logger logger = Logger.getLogger(SyncServer.class.getName());
+	private static final Logger logger = Logger.getLogger(StreamServer.class.getName());
 
 	public static void main(String[] args) throws IOException, ParseException {
 
@@ -52,7 +52,7 @@ public class SyncServer {
 		URI baseUri = UriBuilder.fromUri("http://" + InetAddress.getLocalHost().getHostName() + "/").port(port).build();
 
 		ResourceConfig resourceConfig = new ResourceConfig(SseFeature.class, JacksonFeature.class);
-		resourceConfig.packages(SyncService.class.getPackage().getName());
+		resourceConfig.packages(StreamService.class.getPackage().getName());
 		resourceConfig.register(new ResourceBinder());
 		HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, resourceConfig);
 

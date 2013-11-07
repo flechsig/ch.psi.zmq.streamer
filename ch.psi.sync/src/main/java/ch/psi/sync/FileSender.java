@@ -21,96 +21,44 @@ package ch.psi.sync;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jeromq.ZMQ;
 
+import com.google.common.eventbus.Subscribe;
+
 /**
  *	Sender to send files via ZeroMQ which are selected to be send.
- *	The sender receives the files to transfer in a in queue, reads the file
- *	transfers the content and then deletes the file (optional)
+ *	The sender receives the file path to transfer, reads the file
+ *	send the content and then deletes the file (optional)
  */
 public class FileSender {
 	
 	private static final Logger logger = Logger.getLogger(FileSender.class.getName());
 	
-	private BlockingQueue<Path> queue;
-	private int port;
-	
 	private ZMQ.Context context;
 	private ZMQ.Socket socket;
 	
-	public FileSender(int port, BlockingQueue<Path> queue){
-		this.port = port;
-		this.queue = queue;
-	}
-	
-	public void send(){
+	public void start(int port){
 		context = ZMQ.context(1);
 		socket = context.socket(ZMQ.PUSH);
 		socket.bind("tcp://*:"+port);
-		
-		while(true){
-			try{
-				Path file = queue.take();
-				
-				logger.info("Sending file: "+file);
-				// Send header
-				socket.sendMore("{\"filename\" : \""+file.getFileName()+"\", \"type\":\"raw\"}");
-				// Send data
-				socket.send(Files.readAllBytes(file));
-				
-			} catch (InterruptedException e) {
-				break;
-			} catch (IOException e) {
-				logger.log(Level.SEVERE, "Unable to read file", e);
-			}
+	}
+	
+	@Subscribe
+	public void onFile(Path file){
+		logger.info("Sending file: "+file);
+		socket.sendMore("{\"filename\" : \""+file.getFileName()+"\", \"type\":\"raw\"}");
+		try {
+			socket.send(Files.readAllBytes(file));
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, "Unable to send file",e);
 		}
-		socket.close();
-		context.term();
 	}
 	
 	public void terminate(){
-		queue.notifyAll();
+		socket.close();
+		context.term();
 	}
-	
-	
-	
-	public static void main(String[] args) {
-
-    	String directory = ".";
-    	String pattern = "glob:*";
-    	
-    	if(args.length>0){
-    		directory = args[0];
-    		if(args.length>1){
-    			pattern = args[1];
-    		}
-    	}
-    	
-    	final BlockingQueue<Path> q = new ArrayBlockingQueue<>(50);
-        final DirectoryWatchService watch = new DirectoryWatchService(q);
-        final FileSender sender = new FileSender(8080, q);
-
-        
-        new Thread(new Runnable() {
-			@Override
-			public void run() {
-				sender.send();
-			}
-		}).start();
-        
-        
-        try {
-            watch.watch(Paths.get(directory), pattern);
-        } catch (IOException | InterruptedException ex) {
-            System.err.println(ex);
-        }
-
-    }
-
 }

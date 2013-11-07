@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# sync          Start/Stop sync
+#
+# chkconfig: 35 98 10
+# description: sync service
+# processname: sync
+# config:
+# pidfile: /var/run/sync.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+
+USER=sync
+HOME=/usr/local/sync
+SU="su --login  $USER --command  "
+
+case "$1" in
+start)
+  $SU "$HOME/latest/bin/sync -p 9999 > /dev/null 2>&1 &"
+  ;;
+stop)
+  $SU "pkill -f 'java .* /usr/local/sync' > /dev/null 2>&1 &"
+  ;;
+\*)
+  echo "usage: $0 (start|stop|help)"
+esac
