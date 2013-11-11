@@ -18,17 +18,32 @@
  */
 package ch.psi.sync;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.jeromq.ZMQ;
 
+import sun.misc.Signal;
+import sun.misc.SignalHandler;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  *	ZeroMQ Receiver which accepts the a file from a ZeroMQ message and saves it to a predefined directory.
+ *	
+ *	The message recieved need to hold a pilatus-1.0 style message header. For details see 
+ *  https://confluence.psi.ch/display/SOF/ZMQ+Data+Streaming. If not the message will be ignored.
  */
 public class FileReceiver {
 	
@@ -48,6 +63,9 @@ public class FileReceiver {
 		this.basedir = basedir;
 	}
 	
+	/**
+	 * Receive ZMQ messages with pilatus-1.0 header type and write the data part to disk
+	 */
 	public void receive(){
 		receive = true;
 		context = ZMQ.context(1);
@@ -55,7 +73,8 @@ public class FileReceiver {
 		socket.connect("tcp://"+hostname+":"+port);
 		
 		ObjectMapper mapper = new ObjectMapper();
-		
+		TypeReference<HashMap<String,Object>> typeRef = new TypeReference<HashMap<String,Object>>() {};
+		String path = "";
 		while(receive){
 			try{
 				byte[] message = socket.recv();
@@ -65,15 +84,22 @@ public class FileReceiver {
 				}
 				logger.info(new String(message));
 				
-				Header h = mapper.readValue(message, Header.class);
+				Map<String,Object> h = mapper.readValue(message, typeRef);
 				
-				if(!h.getType().equals("raw")){
-					logger.warning("Message type ["+h.getType()+"] not supported");
+				if(!"pilatus-1.0".equals(h.get("htype"))){
+					logger.warning("Message type ["+h.get("htype")+"] not supported - ignore message");
 					continue;
 				}
 				// TODO Save content to file (in basedir)
-				String file = basedir+"/"+h.getFilename(); // TODO remove
-				System.out.println("Write to "+file);
+				String p = basedir+"/"+(String) h.get("path");
+				File f = new File(p);
+				if(!path.equals(p)){
+					f.mkdirs();
+					path = p;
+				}
+				
+				File file = new File(f, (String)h.get("filename")); // TODO remove
+				logger.finest("Write to "+file.getAbsolutePath());
 			
 				try(FileOutputStream s = new FileOutputStream(file)){
 					s.write(content);
@@ -93,8 +119,51 @@ public class FileReceiver {
 	
 
 	public static void main(String[] args) {
-		FileReceiver r = new FileReceiver("localhost", 8080, ".");
+		
+		int port = 8080;
+		String source = "localost";
+		Options options = new Options();
+		options.addOption("h", false, "Help");
+		options.addOption("p", true, "Source port (default: "+port+")");
+		options.addOption("s", true, "Source (default: "+source+")");
+
+		GnuParser parser = new GnuParser();
+		CommandLine line;
+		try {
+			line = parser.parse(options, args);
+			if (line.hasOption("p")) {
+				port = Integer.parseInt(line.getOptionValue("p"));
+			}
+			if (line.hasOption("s")) {
+				source = line.getOptionValue("s");
+			}
+			if (line.hasOption("h")) {
+				HelpFormatter f = new HelpFormatter();
+				f.printHelp("receiver", options);
+				return;
+			}
+		} catch (ParseException e) {
+			logger.log(Level.WARNING, "Unable to parse commandline",e);
+		}
+		
+		
+		final FileReceiver r = new FileReceiver(source, port, ".");
 		r.receive();
+		
+		// Control+C
+		Signal.handle(new Signal("INT"), new SignalHandler() {
+			int count = 0;
+			public void handle(Signal sig) {
+				if(count <1){
+					count++;
+					r.terminate();
+				}
+				else{
+					System.exit(-1);
+				}
+				
+			}
+		});
 	}
 
 }

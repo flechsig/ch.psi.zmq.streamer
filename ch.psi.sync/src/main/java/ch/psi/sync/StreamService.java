@@ -18,7 +18,10 @@
  */
 package ch.psi.sync;
 
+import javax.inject.Inject;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -26,6 +29,9 @@ import javax.ws.rs.core.MediaType;
 @Path("/")
 public class StreamService {
 
+	@Inject
+	private Streamer streamer;
+	
 	@GET
     @Path("version")
     @Produces(MediaType.TEXT_PLAIN)
@@ -36,4 +42,16 @@ public class StreamService {
     	}
     	return version;
     }
+	
+	@PUT
+	@Path("stream")
+	public void stream(String path){
+		streamer.stream(path);
+	}
+	
+	@DELETE
+	@Path("stream")
+	public void terminate(){
+		streamer.stop();
+	}
 }

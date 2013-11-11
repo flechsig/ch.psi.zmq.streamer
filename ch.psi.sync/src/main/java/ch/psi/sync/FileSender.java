@@ -30,8 +30,11 @@ import com.google.common.eventbus.Subscribe;
 
 /**
  *	Sender to send files via ZeroMQ which are selected to be send.
- *	The sender receives the file path to transfer, reads the file
- *	send the content and then deletes the file (optional)
+ *	The sender receives the file path to transfer via the event bus, reads the file
+ *	send the content and then optionally (default:true) deletes the file.
+ *  
+ *  The message send will hold a pilatus-1.0 style message header. For details see 
+ *  https://confluence.psi.ch/display/SOF/ZMQ+Data+Streaming
  */
 public class FileSender {
 	
@@ -39,6 +42,9 @@ public class FileSender {
 	
 	private ZMQ.Context context;
 	private ZMQ.Socket socket;
+	
+	private String path = "";
+	private boolean wipe = true;
 	
 	public void start(int port){
 		context = ZMQ.context(1);
@@ -49,9 +55,12 @@ public class FileSender {
 	@Subscribe
 	public void onFile(Path file){
 		logger.info("Sending file: "+file);
-		socket.sendMore("{\"filename\" : \""+file.getFileName()+"\", \"type\":\"raw\"}");
+		socket.sendMore("{\"filename\" : \""+file.getFileName()+"\", \"path\":\""+path+"\", \"type\":\"pilatus-1.0\"}");
 		try {
 			socket.send(Files.readAllBytes(file));
+			if(wipe){
+				Files.delete(file);
+			}
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Unable to send file",e);
 		}
@@ -60,5 +69,18 @@ public class FileSender {
 	public void terminate(){
 		socket.close();
 		context.term();
+	}
+
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
+	public boolean isWipe() {
+		return wipe;
+	}
+	public void setWipe(boolean wipe) {
+		this.wipe = wipe;
 	}
 }

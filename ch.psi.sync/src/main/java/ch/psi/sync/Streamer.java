@@ -18,10 +18,64 @@
  */
 package ch.psi.sync;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import com.google.common.eventbus.AsyncEventBus;
+import com.google.common.eventbus.EventBus;
+
 /**
- * @author ebner
- *
+ * Streamer to stream out files from a given directory to ZMQ.
+ * The streamer is split into a DirectoryWatchDog and a file sender.
+ * Each of them are running in a separate thread.
+ * 
  */
 public class Streamer {
+	
+	private EventBus bus;
+	private DirectoryWatchDog wdog;
+	private Executor wdogExecutor = Executors.newSingleThreadExecutor();
+	private FileSender sender;
+	
+	public Streamer(){
+		bus = new AsyncEventBus(Executors.newSingleThreadExecutor());
+		wdog = new DirectoryWatchDog(bus);
+		sender = new FileSender();
+		
+	}
 
+	
+	public void stream(String path){
+		stream(FileSystems.getDefault().getPath(path));
+	}
+	
+	/**
+	 * Start streaming data out to ZMQ
+	 */
+	public void stream(final Path path){
+		bus.register(sender);
+		wdogExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					wdog.watch(path);
+				} catch (IOException | InterruptedException e) {
+					throw new RuntimeException("Unable to start watching path",e);
+				}
+			}
+		});
+	}
+	
+	
+	/**
+	 * Stop datastream
+	 */
+	public void stop(){
+		bus.unregister(sender);
+		wdog.terminate();
+	}
+	
 }

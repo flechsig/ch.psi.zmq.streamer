@@ -21,6 +21,8 @@ public class DirectoryWatchDog {
 	private volatile boolean watch = true;
 	private EventBus ebus;
 
+	private String filePattern = "glob:*";
+	
 	@Inject
 	public DirectoryWatchDog(EventBus ebus){
 		this.ebus = ebus;
@@ -30,16 +32,15 @@ public class DirectoryWatchDog {
 	 * Watch a given path (i.e. directory) for new files which match a given pattern
 	 * 
 	 * @param path		Directory to watch
-	 * @param pattern	Glob or regex pattern the filename has to match. Examples: glob:* , regex:.*
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-    public void watch(Path path, String pattern) throws IOException, InterruptedException {
+    public void watch(Path path) throws IOException, InterruptedException {
     	watch=true;
         try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
             path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
 
-            PathMatcher matcher = FileSystems.getDefault().getPathMatcher(pattern);
+            PathMatcher matcher = FileSystems.getDefault().getPathMatcher(filePattern);
             
             //start an infinite loop
             while (watch) {
@@ -84,6 +85,22 @@ public class DirectoryWatchDog {
     
     public void terminate(){
     	watch=false;
+    }
+    
+    /**
+     * Set file pattern to watch for
+     * @param pattern	Glob or regex pattern the filename has to match. Examples: glob:* , regex:.*
+     */
+    public void setFilePattern(String pattern){
+    	this.filePattern = pattern;
+    }
+    
+    /**
+     * Get actual file pattern
+     * @return
+     */
+    public String getFilePattern(){
+    	return filePattern;
     }
 
 }
