@@ -18,8 +18,6 @@
  */
 package ch.psi.sync;
 
-import java.util.Map;
-
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
