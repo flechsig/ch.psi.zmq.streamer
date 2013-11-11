@@ -24,6 +24,8 @@ import java.nio.file.Path;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import ch.psi.sync.model.StreamRequest;
+
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 
@@ -47,21 +49,18 @@ public class Streamer {
 		
 	}
 
-	
-	public void stream(String path){
-		stream(FileSystems.getDefault().getPath(path));
-	}
-	
 	/**
 	 * Start streaming data out to ZMQ
 	 */
-	public void stream(final Path path){
+	public void stream(StreamRequest request){
+		final Path path = FileSystems.getDefault().getPath(request.getSearchPath());
+		final String pattern = request.getSearchPattern();
 		bus.register(sender);
 		wdogExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					wdog.watch(path);
+					wdog.watch(path, pattern);
 				} catch (IOException | InterruptedException e) {
 					throw new RuntimeException("Unable to start watching path",e);
 				}

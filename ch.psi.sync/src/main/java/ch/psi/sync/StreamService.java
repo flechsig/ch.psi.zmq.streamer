@@ -18,15 +18,20 @@
  */
 package ch.psi.sync;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/")
+import ch.psi.sync.model.StreamRequest;
+
+@Path("/streamer")
 public class StreamService {
 
 	@Inject
@@ -43,15 +48,50 @@ public class StreamService {
     	return version;
     }
 	
+	/**
+	 * Start streaming for a given tracking id
+	 * @param trackingid
+	 * @param path
+	 */
 	@PUT
-	@Path("stream")
-	public void stream(String path){
-		streamer.stream(path);
+	@Path("{trackingid}")
+	public void stream(@PathParam("trackingid") String trackingid, StreamRequest request){
+		// TODO #frames to take, map header info, path
+		streamer.stream(request);
 	}
 	
+	/**
+	 * Terminate the streaming for a given tracking id
+	 * @param trackingid
+	 */
 	@DELETE
-	@Path("stream")
-	public void terminate(){
+	@Path("{trackingid}")
+	public void terminate(@PathParam("trackingid") String trackingid){
 		streamer.stop();
+	}
+	
+	/**
+	 * Get information of the stream
+	 * - #images to transfer
+	 * - transfered so far
+	 * - optional header entries
+	 * 
+	 * will return a does not exist if transfer is done
+	 * 
+	 * @param trackingid
+	 */
+	@GET
+	@Path("{trackingid}")
+	public void getStreamInfo(@PathParam("trackingid") String trackingid){
+		
+	}
+	
+	/**
+	 * Get list of transfers and its status
+	 */
+	@GET
+	@Path("")
+	public void getInfo(){
+		
 	}
 }

@@ -75,8 +75,7 @@ public class DirectoryWatchDogTest {
 
 		});
 
-		watch.setFilePattern(pattern);
-		watch.watch(Paths.get(directory));
+		watch.watch(Paths.get(directory), pattern);
 
 	}
 
