@@ -27,15 +27,13 @@ import java.util.Map;
 public class StreamRequest {
 	
 	private String searchPath;
-	private String searchPattern;
+	private String searchPattern = "glob:*";
 	
-	/**
-	 * destination path for files - will end up in message header
-	 */
-	private String destinationPath;
-	
-	private int numberOfImages;
+	private int numberOfImages = 0;
+	private String destinationPath = "";
 	private Map<String,String> header;
+	
+	
 	public String getSearchPath() {
 		return searchPath;
 	}

@@ -42,10 +42,10 @@ public class Streamer {
 	private Executor wdogExecutor = Executors.newSingleThreadExecutor();
 	private FileSender sender;
 	
-	public Streamer(){
+	public Streamer(StreamerConfiguration configuration){
 		bus = new AsyncEventBus(Executors.newSingleThreadExecutor());
 		wdog = new DirectoryWatchDog(bus);
-		sender = new FileSender();
+		sender = new FileSender(configuration.getPort(), configuration.isWipeFile());
 		
 	}
 
@@ -55,7 +55,9 @@ public class Streamer {
 	public void stream(StreamRequest request){
 		final Path path = FileSystems.getDefault().getPath(request.getSearchPath());
 		final String pattern = request.getSearchPattern();
+		sender.start();
 		bus.register(sender);
+		
 		wdogExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -74,6 +76,7 @@ public class Streamer {
 	 */
 	public void stop(){
 		bus.unregister(sender);
+		sender.terminate();
 		wdog.terminate();
 	}
 	

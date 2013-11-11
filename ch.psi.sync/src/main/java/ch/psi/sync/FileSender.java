@@ -40,16 +40,25 @@ public class FileSender {
 	
 	private static final Logger logger = Logger.getLogger(FileSender.class.getName());
 	
+	private int port;
 	private ZMQ.Context context;
 	private ZMQ.Socket socket;
 	
 	private String path = "";
 	private boolean wipe = true;
+	private int sendCount = 0;
 	
-	public void start(int port){
+	public FileSender(int port, boolean wipe){
+		this.port = port;
+		this.wipe = wipe;
+	}
+	
+	public void start(){
 		context = ZMQ.context(1);
 		socket = context.socket(ZMQ.PUSH);
 		socket.bind("tcp://*:"+port);
+		
+		sendCount=0;
 	}
 	
 	@Subscribe
@@ -58,6 +67,7 @@ public class FileSender {
 		socket.sendMore("{\"filename\" : \""+file.getFileName()+"\", \"path\":\""+path+"\", \"type\":\"pilatus-1.0\"}");
 		try {
 			socket.send(Files.readAllBytes(file));
+			sendCount++;
 			if(wipe){
 				Files.delete(file);
 			}
@@ -80,7 +90,7 @@ public class FileSender {
 	public boolean isWipe() {
 		return wipe;
 	}
-	public void setWipe(boolean wipe) {
-		this.wipe = wipe;
+	public int getSendCount() {
+		return sendCount;
 	}
 }

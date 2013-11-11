@@ -18,43 +18,25 @@
  */
 package ch.psi.sync;
 
-import java.nio.file.FileSystems;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.common.eventbus.EventBus;
-
 /**
  * @author ebner
  *
  */
-public class FileSenderTest {
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
+public class StreamerConfiguration {
+	private int port = 8888;
+	private boolean wipeFile = true;
+	
+	public int getPort() {
+		return port;
 	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
+	public void setPort(int port) {
+		this.port = port;
 	}
-
-	@Test
-	public void test() {
-		EventBus bus = new EventBus();
-        final FileSender sender = new FileSender(9998, false);
-        bus.register(sender);
-        
-        sender.start();
-        
-        bus.post(FileSystems.getDefault().getPath(".","a.txt"));
+	public boolean isWipeFile() {
+		return wipeFile;
 	}
-
+	public void setWipeFile(boolean wipeFile) {
+		this.wipeFile = wipeFile;
+	}
+	
 }
