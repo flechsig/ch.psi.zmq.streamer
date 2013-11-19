@@ -121,7 +121,7 @@ public class FileReceiver {
 	public static void main(String[] args) {
 		
 		int port = 8080;
-		String source = "localost";
+		String source = "localhost";
 		Options options = new Options();
 		options.addOption("h", false, "Help");
 		options.addOption("p", true, "Source port (default: "+port+")");

@@ -64,7 +64,6 @@ public class FileReceiverTest {
 			}
 		}, 1000);
 		receiver.receive();
-		
 	}
 
 }
