@@ -1,5 +1,6 @@
 package ch.psi.sync;
 import java.io.IOException;
+import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
@@ -8,6 +9,7 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
@@ -20,6 +22,8 @@ public class DirectoryWatchDog {
 	
 	private volatile boolean watch = true;
 	private EventBus ebus;
+	
+	private WatchService watchService;
 
 	@Inject
 	public DirectoryWatchDog(EventBus ebus){
@@ -39,7 +43,8 @@ public class DirectoryWatchDog {
 	 */
     public void watch(Path path, String pattern) throws IOException, InterruptedException {
     	watch=true;
-        try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
+    	try{
+    		watchService = FileSystems.getDefault().newWatchService();
             path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
 
             PathMatcher matcher = FileSystems.getDefault().getPathMatcher(pattern);
@@ -83,9 +88,29 @@ public class DirectoryWatchDog {
                 }
             }
         }
+    	catch(ClosedWatchServiceException e){
+    		// Exception occurs when shutting down the watch service while take() operation is blocking
+    		logger.log(Level.INFO, "Watch service was closed");
+    	}
+    	finally{
+    		// Ensure, no matter what, that WatchService is closed to avoid a memory leak
+    		try{
+    			watchService.close();
+    		}
+    		catch(Exception e){
+    		}
+    	}
     }
     
+    /**
+     * Terminate directory watch
+     */
     public void terminate(){
     	watch=false;
+    	try {
+			watchService.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 }

@@ -18,75 +18,53 @@
  */
 package ch.psi.sync;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.FileSystems;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.eventbus.AsyncEventBus;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-
 /**
  * @author ebner
- * 
+ *
  */
-public class DirectoryWatchDogTest {
+public class FileReceiverTest {
+	
+	private static final Logger logger = Logger.getLogger(FileReceiverTest.class.getName());
 
-	private static final Logger logger = Logger.getLogger(DirectoryWatchDogTest.class.getName());
-
-	/**
-	 * @throws java.lang.Exception
-	 */
+	private FileSender sender;
+	private FileReceiver receiver;
+	
 	@Before
 	public void setUp() throws Exception {
+		sender = new FileSender(8080, false);
+		receiver = new FileReceiver("emac", 8080, "target");
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception {
 	}
 
 	@Test
-	public void test() throws IOException, InterruptedException {
-
-		// String directory = ".";
-		String directory = "/Users/ebner/Desktop";
-		String pattern = "glob:*";
-
-		logger.info("Watching '" + directory + "' for file pattern '" + pattern + "'");
-
-		EventBus b = new AsyncEventBus(Executors.newFixedThreadPool(1));
-		final DirectoryWatchDog watch = new DirectoryWatchDog(b);
-
-		b.register(new Object() {
-
-			@Subscribe
-			public void log(Path p) {
-				logger.info("Process " + p + " ...");
-			}
-
-		});
-
+	public void test() {
 		new Timer().schedule(new TimerTask() {
+			
 			@Override
 			public void run() {
-				logger.info("Terminate watch");
-				watch.terminate();
+				System.out.println("re");
+				sender.start();
+				sender.onFile(FileSystems.getDefault().getPath("src/test/resources/testfile.png"));
+				sender.terminate();
+				
+				receiver.terminate();
+				logger.info("Done");
 			}
 		}, 1000);
+		receiver.receive();
 		
-		watch.watch(Paths.get(directory), pattern);
-		logger.info("Done");
 	}
 
 }

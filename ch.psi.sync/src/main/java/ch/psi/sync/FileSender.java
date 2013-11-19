@@ -64,7 +64,7 @@ public class FileSender {
 	@Subscribe
 	public void onFile(Path file){
 		logger.info("Sending file: "+file);
-		socket.sendMore("{\"filename\" : \""+file.getFileName()+"\", \"path\":\""+path+"\", \"type\":\"pilatus-1.0\"}");
+		socket.sendMore("{\"filename\" : \""+file.getFileName()+"\", \"path\":\""+path+"\", \"htype\":\"pilatus-1.0\"}");
 		try {
 			socket.send(Files.readAllBytes(file));
 			sendCount++;
