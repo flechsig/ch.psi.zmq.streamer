@@ -73,8 +73,16 @@ public class StreamServer {
 		// Signal handling
 		final CountDownLatch latch = new CountDownLatch(1);
 		Signal.handle(new Signal("INT"), new SignalHandler() {
+			int count = 0;
 			public void handle(Signal sig) {
-				latch.countDown();
+				count++;
+				if(count >1){
+					logger.info("Force termination of JVM");
+					System.exit(-1);
+				}
+				else{
+					latch.countDown();
+				}
 			}
 		});
 
