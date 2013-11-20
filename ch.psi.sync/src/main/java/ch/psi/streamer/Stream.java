@@ -16,7 +16,7 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.sync;
+package ch.psi.streamer;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-import ch.psi.sync.model.StreamRequest;
+import ch.psi.streamer.model.StreamRequest;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;

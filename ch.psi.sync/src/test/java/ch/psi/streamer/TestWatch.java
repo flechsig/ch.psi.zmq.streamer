@@ -1,4 +1,4 @@
-package ch.psi.sync;
+package ch.psi.streamer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;

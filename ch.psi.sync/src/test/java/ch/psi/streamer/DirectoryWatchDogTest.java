@@ -16,7 +16,7 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.sync;
+package ch.psi.streamer;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -29,6 +29,8 @@ import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import ch.psi.streamer.DirectoryWatchDog;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;

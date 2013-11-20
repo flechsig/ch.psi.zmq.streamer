@@ -16,7 +16,7 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.sync;
+package ch.psi.streamer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import ch.psi.sync.model.StreamRequest;
+import ch.psi.streamer.model.StreamRequest;
 
 @Path("/")
 public class StreamService {

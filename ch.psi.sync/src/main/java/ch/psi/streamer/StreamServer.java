@@ -1,4 +1,4 @@
-package ch.psi.sync;
+package ch.psi.streamer;
 
 import java.io.IOException;
 import java.net.InetAddress;

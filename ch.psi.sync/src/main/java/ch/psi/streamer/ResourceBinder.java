@@ -1,4 +1,4 @@
-package ch.psi.sync;
+package ch.psi.streamer;
 
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;

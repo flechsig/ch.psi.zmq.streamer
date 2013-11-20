@@ -39,4 +39,4 @@ done
 
 SYNC_BASE=$BASEDIR/../
 export SYNC_BASE
-java $VM_ARGUMENTS -cp $CLASSPATH ch.psi.sync.FileReceiver $ARGUMENTS
+java $VM_ARGUMENTS -cp $CLASSPATH ch.psi.streamer.FileReceiver $ARGUMENTS

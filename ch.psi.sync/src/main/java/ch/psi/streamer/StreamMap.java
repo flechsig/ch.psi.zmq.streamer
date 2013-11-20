@@ -16,47 +16,10 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.sync;
+package ch.psi.streamer;
 
-import java.nio.file.FileSystems;
+import java.util.HashMap;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import com.google.common.eventbus.EventBus;
-
-/**
- * @author ebner
- *
- */
-public class FileSenderTest {
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
-
-	@Ignore
-	@Test
-	public void test() {
-		EventBus bus = new EventBus();
-        final FileSender sender = new FileSender(9998, false);
-        bus.register(sender);
-        
-        sender.start();
-        
-        bus.post(FileSystems.getDefault().getPath(".","a.txt"));
-	}
-
+public class StreamMap extends HashMap<String, Stream> {
+	private static final long serialVersionUID = 1L;
 }

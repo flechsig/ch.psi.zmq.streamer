@@ -16,7 +16,7 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.sync;
+package ch.psi.streamer;
 
 import java.nio.file.FileSystems;
 import java.util.Timer;
@@ -26,6 +26,9 @@ import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import ch.psi.streamer.FileReceiver;
+import ch.psi.streamer.FileSender;
 
 /**
  * @author ebner
