@@ -76,13 +76,13 @@ public class StreamServer {
 			int count = 0;
 			public void handle(Signal sig) {
 				count++;
+				
 				if(count >1){
 					logger.info("Force termination of JVM");
 					System.exit(-1);
 				}
-				else{
-					latch.countDown();
-				}
+
+				latch.countDown();
 			}
 		});
 
