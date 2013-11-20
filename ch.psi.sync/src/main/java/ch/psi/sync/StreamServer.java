@@ -58,7 +58,7 @@ public class StreamServer {
 		HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, resourceConfig);
 
 		// Static content
-		String home = System.getenv("SYNC_BASE");
+		String home = System.getenv("STREAMER_BASE");
 		if (home == null) {
 			home = "src/main/assembly";
 		}

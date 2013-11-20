@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# streamer          Start/Stop sync
+#
+# chkconfig: 35 98 10
+# description: streamer service
+# processname: streamer
+# config:
+# pidfile: /var/run/streamer.pid
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+
+USER=streamer
+HOME=/usr/local/streamer
+SU="su --login  $USER --command  "
+
+case "$1" in
+start)
+  $SU "$HOME/latest/bin/streamer -p 9999 > /dev/null 2>&1 &"
+  ;;
+stop)
+  $SU "pkill -f 'java .* /usr/local/streamer' > /dev/null 2>&1 &"
+  ;;
+\*)
+  echo "usage: $0 (start|stop|help)"
+esac

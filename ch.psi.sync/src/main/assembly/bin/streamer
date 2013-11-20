@@ -37,6 +37,6 @@ do
 done
 
 
-SYNC_BASE=$BASEDIR/../
-export SYNC_BASE
+STREAMER_BASE=$BASEDIR/../
+export STREAMER_BASE
 java $VM_ARGUMENTS -cp $CLASSPATH ch.psi.sync.StreamServer $ARGUMENTS
