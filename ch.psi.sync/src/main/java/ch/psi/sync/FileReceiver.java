@@ -31,13 +31,13 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.jeromq.ZMQ;
 
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  *	ZeroMQ Receiver which accepts the a file from a ZeroMQ message and saves it to a predefined directory.
