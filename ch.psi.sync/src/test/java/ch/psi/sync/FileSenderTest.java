@@ -22,6 +22,7 @@ import java.nio.file.FileSystems;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.eventbus.EventBus;
@@ -46,6 +47,7 @@ public class FileSenderTest {
 	public void tearDown() throws Exception {
 	}
 
+	@Ignore
 	@Test
 	public void test() {
 		EventBus bus = new EventBus();

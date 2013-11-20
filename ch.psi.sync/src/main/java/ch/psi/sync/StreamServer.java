@@ -44,7 +44,7 @@ public class StreamServer {
 		}
 		if (line.hasOption("h")) {
 			HelpFormatter f = new HelpFormatter();
-			f.printHelp("hub", options);
+			f.printHelp("streamer", options);
 			return;
 		}
 
