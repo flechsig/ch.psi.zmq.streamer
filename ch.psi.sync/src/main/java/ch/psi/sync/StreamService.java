@@ -23,13 +23,12 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import ch.psi.sync.model.StreamRequest;
 
-@Path("/streamer")
+@Path("/")
 public class StreamService {
 
 	@Inject
@@ -52,8 +51,10 @@ public class StreamService {
 	 * @param path
 	 */
 	@PUT
-	@Path("{trackingid}")
-	public void stream(@PathParam("trackingid") String trackingid, StreamRequest request){
+//	@Path("stream/{trackingid}")
+//	public void stream(@PathParam("trackingid") String trackingid, StreamRequest request){
+	@Path("stream")
+	public void stream(StreamRequest request){
 		// TODO #frames to take, map header info, path
 		streamer.stream(request);
 	}
@@ -63,33 +64,35 @@ public class StreamService {
 	 * @param trackingid
 	 */
 	@DELETE
-	@Path("{trackingid}")
-	public void terminate(@PathParam("trackingid") String trackingid){
+//	@Path("stream/{trackingid}")
+//	public void terminate(@PathParam("trackingid") String trackingid){
+	@Path("stream")
+	public void terminate(){
 		streamer.stop();
 	}
 	
-	/**
-	 * Get information of the stream
-	 * - #images to transfer
-	 * - transfered so far
-	 * - optional header entries
-	 * 
-	 * will return a does not exist if transfer is done
-	 * 
-	 * @param trackingid
-	 */
-	@GET
-	@Path("{trackingid}")
-	public void getStreamInfo(@PathParam("trackingid") String trackingid){
-		
-	}
-	
-	/**
-	 * Get list of transfers and its status
-	 */
-	@GET
-	@Path("")
-	public void getInfo(){
-		
-	}
+//	/**
+//	 * Get information of the stream
+//	 * - #images to transfer
+//	 * - transfered so far
+//	 * - optional header entries
+//	 * 
+//	 * will return a does not exist if transfer is done
+//	 * 
+//	 * @param trackingid
+//	 */
+//	@GET
+//	@Path("{trackingid}")
+//	public void getStreamInfo(@PathParam("trackingid") String trackingid){
+//		
+//	}
+//	
+//	/**
+//	 * Get list of transfers and its status
+//	 */
+//	@GET
+//	@Path("")
+//	public void getInfo(){
+//		
+//	}
 }

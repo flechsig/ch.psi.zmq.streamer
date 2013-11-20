@@ -20,9 +20,9 @@ package ch.psi.sync;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 import ch.psi.sync.model.StreamRequest;
 
@@ -37,24 +37,24 @@ import com.google.common.eventbus.EventBus;
  */
 public class Streamer {
 	
+	private static final Logger logger = Logger.getLogger(Streamer.class.getName());
+	
 	private EventBus bus;
 	private DirectoryWatchDog wdog;
 	private Executor wdogExecutor = Executors.newSingleThreadExecutor();
 	private FileSender sender;
 	
-	public Streamer(StreamerConfiguration configuration){
-		bus = new AsyncEventBus(Executors.newSingleThreadExecutor());
-		wdog = new DirectoryWatchDog(bus);
-		sender = new FileSender(configuration.getPort(), configuration.isWipeFile());
-		
-	}
-
 	/**
 	 * Start streaming data out to ZMQ
 	 */
-	public void stream(StreamRequest request){
-		final Path path = FileSystems.getDefault().getPath(request.getSearchPath());
-		final String pattern = request.getSearchPattern();
+	public void stream(final StreamRequest request){
+		
+		bus = new AsyncEventBus(Executors.newSingleThreadExecutor());
+		wdog = new DirectoryWatchDog(bus);
+		sender = new FileSender(request.getPort(), request.isWipeFile());
+		
+		logger.info("Start streaming ...");
+		sender.setPath(request.getDestinationPath());
 		sender.start();
 		bus.register(sender);
 		
@@ -62,7 +62,7 @@ public class Streamer {
 			@Override
 			public void run() {
 				try {
-					wdog.watch(path, pattern);
+					wdog.watch(FileSystems.getDefault().getPath(request.getSearchPath()), request.getSearchPattern());
 				} catch (IOException | InterruptedException e) {
 					throw new RuntimeException("Unable to start watching path",e);
 				}
@@ -75,9 +75,19 @@ public class Streamer {
 	 * Stop datastream
 	 */
 	public void stop(){
-		bus.unregister(sender);
-		sender.terminate();
-		wdog.terminate();
+		logger.info("... terminate streaming");
+		
+		if(bus!=null && sender!=null && wdog!=null){
+			bus.unregister(sender);
+			sender.terminate();
+			wdog.terminate();
+		}
+		
+		bus= null;
+		sender=null;
+		wdog = null;
+		
+		logger.info("Streaming terminated");
 	}
 	
 }

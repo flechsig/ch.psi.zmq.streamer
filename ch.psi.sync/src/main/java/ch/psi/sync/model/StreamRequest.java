@@ -33,7 +33,21 @@ public class StreamRequest {
 	private String destinationPath = "";
 	private Map<String,String> header;
 	
+	private int port = 8888;
+	private boolean wipeFile = false;
 	
+	public int getPort() {
+		return port;
+	}
+	public void setPort(int port) {
+		this.port = port;
+	}
+	public boolean isWipeFile() {
+		return wipeFile;
+	}
+	public void setWipeFile(boolean wipeFile) {
+		this.wipeFile = wipeFile;
+	}
 	public String getSearchPath() {
 		return searchPath;
 	}

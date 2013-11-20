@@ -30,18 +30,17 @@ public class StreamServer {
 
 	public static void main(String[] args) throws IOException, ParseException {
 
-
-		StreamerConfiguration configuration = new StreamerConfiguration();
+		int webserverPort = 8080;
 		
 		Options options = new Options();
 		options.addOption("h", false, "Help");
-		options.addOption("p", true, "Server port (default: "+configuration.getPort()+")");
+		options.addOption("p", true, "Webserver port (default: "+webserverPort+")");
 
 		GnuParser parser = new GnuParser();
 		CommandLine line = parser.parse(options, args);
 
 		if (line.hasOption("p")) {
-			configuration.setPort(Integer.parseInt(line.getOptionValue("p")));
+			webserverPort = Integer.parseInt(line.getOptionValue("p"));
 		}
 		if (line.hasOption("h")) {
 			HelpFormatter f = new HelpFormatter();
@@ -51,11 +50,11 @@ public class StreamServer {
 
 		
 		
-		URI baseUri = UriBuilder.fromUri("http://" + InetAddress.getLocalHost().getHostName() + "/").port(configuration.getPort()).build();
+		URI baseUri = UriBuilder.fromUri("http://" + InetAddress.getLocalHost().getHostName() + "/").port(webserverPort).build();
 
 		ResourceConfig resourceConfig = new ResourceConfig(SseFeature.class, JacksonFeature.class);
 		resourceConfig.packages(StreamService.class.getPackage().getName());
-		resourceConfig.register(new ResourceBinder(configuration));
+		resourceConfig.register(new ResourceBinder());
 		HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, resourceConfig);
 
 		// Static content
