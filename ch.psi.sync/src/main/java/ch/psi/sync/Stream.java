@@ -20,7 +20,7 @@ package ch.psi.sync;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
@@ -35,13 +35,13 @@ import com.google.common.eventbus.EventBus;
  * Each of them are running in a separate thread.
  * 
  */
-public class Streamer {
+public class Stream {
 	
-	private static final Logger logger = Logger.getLogger(Streamer.class.getName());
+	private static final Logger logger = Logger.getLogger(Stream.class.getName());
 	
 	private EventBus bus;
 	private DirectoryWatchDog wdog;
-	private Executor wdogExecutor = Executors.newSingleThreadExecutor();
+	private ExecutorService wdogExecutor = Executors.newSingleThreadExecutor();
 	private FileSender sender;
 	
 	/**
@@ -81,6 +81,7 @@ public class Streamer {
 			bus.unregister(sender);
 			sender.terminate();
 			wdog.terminate();
+			wdogExecutor.shutdown();
 		}
 		
 		bus= null;

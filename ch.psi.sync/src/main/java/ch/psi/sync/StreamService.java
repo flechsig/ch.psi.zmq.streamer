@@ -18,11 +18,17 @@
  */
 package ch.psi.sync;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -30,9 +36,11 @@ import ch.psi.sync.model.StreamRequest;
 
 @Path("/")
 public class StreamService {
+	
+	private static final Logger logger = Logger.getLogger(StreamService.class.getName());
 
 	@Inject
-	private Streamer streamer;
+	private StreamMap streams;
 	
 	@GET
     @Path("version")
@@ -51,12 +59,19 @@ public class StreamService {
 	 * @param path
 	 */
 	@PUT
-//	@Path("stream/{trackingid}")
-//	public void stream(@PathParam("trackingid") String trackingid, StreamRequest request){
-	@Path("stream")
-	public void stream(StreamRequest request){
+	@Path("stream/{trackingid}")
+	public void stream(@PathParam("trackingid") String trackingid, StreamRequest request){
 		// TODO #frames to take, map header info, path
-		streamer.stream(request);
+		
+		if(streams.containsKey(trackingid)){
+			logger.info(String.format("Stream %s already exists. Stopping existing stream and starting new one.",trackingid));
+			Stream s = streams.get(trackingid);
+			s.stop();
+		}
+		
+		Stream stream = new Stream();
+		stream.stream(request);
+		streams.put(trackingid, stream);
 	}
 	
 	/**
@@ -64,11 +79,20 @@ public class StreamService {
 	 * @param trackingid
 	 */
 	@DELETE
-//	@Path("stream/{trackingid}")
-//	public void terminate(@PathParam("trackingid") String trackingid){
+	@Path("stream/{trackingid}")
+	public void terminate(@PathParam("trackingid") String trackingid){
+		Stream stream = streams.get(trackingid);
+		if(stream==null){
+			throw new NotFoundException();
+		}
+		stream.stop();
+		streams.remove(trackingid);
+	}
+	
+	@GET
 	@Path("stream")
-	public void terminate(){
-		streamer.stop();
+	public List<String> getStreams(){
+		return(new ArrayList<>(streams.keySet()));
 	}
 	
 //	/**
