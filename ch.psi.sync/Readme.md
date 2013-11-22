@@ -91,6 +91,8 @@ DELETE stream/{id}
 
 ```
 curl -XPUT --data '{"searchPath":"/Users/ebner/Desktop/Test", "searchPattern":"glob:*","destinationPath":"something"}' --header "Content-Type: application/json" http://<hostname>:<port>/stream/id
+
 curl -XDELETE http://<hostname>:<port>/stream/id
+
 curl http://<hostname>:<port>/stream
 ```
