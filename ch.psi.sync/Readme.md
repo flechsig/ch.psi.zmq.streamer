@@ -36,10 +36,9 @@ Usage: streamer
 
 # Development
 
+## Build
 The streamer installation zip package can be build by executing `mvn clean compile assembly:assembly` . 
 This command will create the installable zip inside the `target` directory.
-
-# Development
 
 ## REST API
 Get list of active streams
@@ -65,13 +64,13 @@ PUT stream/{id}
     "searchPath" : "/Users/ebner/Desktop/Test",
     "searchPattern":"glob:*",
     "destinationPath":"ttt",
-    
+
     "numberOfImages":0,
-	"destinationPath":"",
-	"header":{},
-	
-	"port":8888,
-	"wipeFile":"true"
+    "destinationPath":"",
+    "header":{},
+
+    "port":8888,
+    "wipeFile":"true"
     
 }
 
@@ -86,4 +85,12 @@ Terminate stream
 DELETE stream/{id}
 
 200 - Success
+```
+
+### Commandline
+
+```
+curl -XPUT --data '{"searchPath":"/Users/ebner/Desktop/Test", "searchPattern":"glob:*","destinationPath":"something"}' --header "Content-Type: application/json" http://<hostname>:<port>/stream/id
+curl -XDELETE http://<hostname>:<port>/stream/id
+curl http://<hostname>:<port>/stream
 ```
