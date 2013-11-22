@@ -53,7 +53,6 @@ public class StreamServer {
 		URI baseUri = UriBuilder.fromUri("http://" + InetAddress.getLocalHost().getHostName() + "/").port(webserverPort).build();
 
 		ResourceConfig resourceConfig = new ResourceConfig(SseFeature.class, JacksonFeature.class);
-		System.out.println(StreamService.class.getPackage().getName());
 		resourceConfig.register(StreamService.class);
 		resourceConfig.register(new ResourceBinder());
 		HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, resourceConfig);
