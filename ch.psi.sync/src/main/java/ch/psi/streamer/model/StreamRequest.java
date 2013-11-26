@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class StreamRequest {
 	
-	private String searchPath;
+	private String searchPath = "/";
 	private String searchPattern = "glob:*";
 	
 	private int numberOfImages = 0;

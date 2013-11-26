@@ -106,7 +106,7 @@ body {
 	function updateStreams(streams){
 		keytag = $('#streams');
 		keytag.empty();
-		table='<table class="table table-hover"><tbody>';
+		table='<table class="table table-hover span6"><tbody>';
 		
 		for(k in streams){
 			table=table+'<tr><td>'+streams[k]+'</td><td>'+
@@ -160,12 +160,7 @@ body {
 		</div> -->
 
 		<!-- Example row of columns -->
-		<div class="row">
-			<div class="span5">
-				<h2>Streams</h2>
-				<div id="streams"></div>
-			</div>
-		</div>
+		
 		<div class="row">
 			<div class="span6">
 				<h2>New Stream</h2>
@@ -183,7 +178,13 @@ body {
 				<button id="addStreamBtn" class="btn" type="button" onclick="newStream()">Add</button>
 			</div>
 			</div>
-			
+		</div>
+
+		<div class="row">
+			<div class="span6">
+				<h2>Streams</h2>
+				<div id="streams"></div>
+			</div>
 		</div>
 
 		<hr>

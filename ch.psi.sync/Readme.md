@@ -2,11 +2,7 @@
 The streamer package provides an easy to use way to stream files from one location to an other via ZMQ.
 It contains 2 applications, a simple receiver and a stream server. The stream server
 
-# Installation
-Prerequisites:
-* >= Java 7
 
-Unzip the zip file to any location you like
 
 # Usage
 
@@ -120,4 +116,36 @@ curl -XDELETE http://<hostname>:<port>/stream/id
 
 # Get active streams
 curl http://<hostname>:<port>/stream
+```
+
+
+# Installation
+The **Stream** package required Java 7 or greater.
+
+## Simple Installation
+Extract zip file
+
+## Daemon Installation
+
+```
+mkdir /opt/streamer
+cd /opt/streamer
+unzip ch.psi.streamer-<version>-bin.zip
+ln -s ch.psi.streamer-<version> latest
+```
+
+Register Init Script
+
+```
+cp latest/var/streamer /etc/init.d/
+chmod 755 /etc/init.d/streamer
+chkconfig --add streamer
+chkconfig streamer on
+```
+
+Start/Stop Escape Service
+
+```
+service streamer start
+service streamer stop
 ```

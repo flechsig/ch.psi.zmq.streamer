@@ -8,20 +8,25 @@
 # config:
 # pidfile: /var/run/streamer.pid
 
-# Source function library.
-. /etc/rc.d/init.d/functions
+# Use Java 7
+PATH=/opt/jre/bin:$PATH
+export PATH
 
-
-USER=streamer
-HOME=/usr/local/streamer
+USER=det
+HOME=/opt/streamer
 SU="su --login  $USER --command  "
+
+LOGFILE=/var/log/streamer
+
+touch $LOGFILE
+chown $USER $LOGFILE
 
 case "$1" in
 start)
-  $SU "$HOME/latest/bin/streamer -p 9999 > /dev/null 2>&1 &"
+  $SU "PATH=/opt/jre/bin:$PATH $HOME/latest/bin/streamer -p 8080 > $LOGFILE 2>&1 &"
   ;;
 stop)
-  $SU "pkill -f 'java .* /usr/local/streamer' > /dev/null 2>&1 &"
+  $SU "pkill -f 'java .* $HOME' >> $LOGFILE 2>&1 &"
   ;;
 \*)
   echo "usage: $0 (start|stop|help)"
