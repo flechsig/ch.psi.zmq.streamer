@@ -34,7 +34,7 @@ Usage: streamer
 Streamer comes with a web UI. One can use this UI to list and manage current streams.
 The web UI is accessible on `http://<host>:8080`/static/` . Note: It is important to have the last / inside the url!
 
-![Screenshot](ch.psi.escape/screenshot.png?raw) 
+![Screenshot](ch.psi.streamer/screenshot.png?raw) 
 
 
 # Development
