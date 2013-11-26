@@ -25,7 +25,7 @@ body {
 <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 <script src="js/jquery-2.0.0.min.js"></script>
 <script type='text/javascript'>
-	var base = '../hub';
+	var base = '../';
 	var stream;
 
 	function getVersion() {
@@ -35,129 +35,59 @@ body {
 		});
 	}
 	
-	function getBeamlines() {
-		$.get(base, function(data) {
-			/* update beamlines selection */
-			
-			$('#selectionBeamline').empty();
-			for (var i in data){
-				beamline = data[i];
-				$('#selectionBeamline').append('<option value="'+beamline+'">'+beamline+'</option>')
-			}
-			/* $('#selectionBeamline')[0].selectedIndex=0; */
-			connectStream(data[0]);
+	function getStreams() {
+		$.get(base+'stream', function(data) {
+			updateStreams(data);
 		});
 	}
 	
-	function updateKeys(beamline, keys){
-		keytag = $('#beamlineKeys');
+	function deleteStream(id){
+		$.ajax({
+		    url: base+'/beamline/'+id,
+		    type: 'DELETE',
+		    success: function(result) {
+		    }
+		});
+	}
+	
+	
+	function addStream(id, config){
+		$.ajax({
+		    url: base+'/stream/'+id,
+		    type: 'PUT',
+		    data: config,
+		    success: function(result) {
+		    }
+		});
+	}
+	
+	
+	function updateStreams(streams){
+		keytag = $('#streams');
 		keytag.empty();
-		table='<table class="table table-hover"><thead><tr><td>Key</td><td>Value</td></tr></thead><tbody>';
+		table='<table class="table table-hover"><thead><tr><td>Stream</td></tr></thead><tbody>';
 		
-		for(k in keys){
+		for(k in streams){
 			table=table+'<tr><td>'+k+'</td><td>'+
 			'<div class="input-append">'+
-			'<input type="text" value="'+keys[k]+'" onchange="setKey(\''+beamline+'\',\''+k+'\',$(this).val())">'+
-			//'<button class="btn" type="button" onclick="setKey(\''+beamline+'\',\''+k+'\',$(this).prev().val())">Update</button>'+
-			'<button class="btn" type="button" onclick="deleteKey(\''+beamline+'\',\''+k+'\')">Delete</button>'+
+			'<button class="btn" type="button" onclick="deleteStream(\''+d+'\')">Delete</button>'+
 			'</div>'+
 			'</td></tr>';
 		}
 		
-		table = table+'<tr>'+
-			'<td><input id="keyToAdd" type="text" placeholder="Key"></td>'+
-			'<td><div class="input-append">'+
-			'<input id="valueToAdd"type="text" placeholder="Value">'+
-			'<button class="btn" type="button" onclick="setKey(\''+beamline+'\',$(\'#keyToAdd\').val(),$(\'#valueToAdd\').val())">Add</button>'+
-			'</div></td>'+
-			'</tr>';
-		
 		table = table+'</table></tbody>';
 		keytag.append(table);
 	}
-
-	function connectStream(beamline) {
-		closeStream();
-		stream = new EventSource(base + '/' + beamline + '/stream');
-		stream.onmessage = function(event) {
-			keys=JSON.parse(event.data)
-			updateKeys(beamline, keys);
-			
-		};
-		getKeys(beamline);
-	}
-
-	function closeStream() {
-		try {
-			stream.close();
-		} catch (e) {
-		}
-	}
-	
-	function getKeys(beamline){
-		$.get(base+'/'+beamline+'/keys', function(data) {
-			updateKeys(beamline, data );
-		});
-	}
-	
-	function setKey(beamline, key, value){
-		$.ajax({
-		    url: base+'/'+beamline+'/keys/'+key,
-		    type: 'PUT',
-		    data: value,
-		    success: function(result) {
-		    }
-		});
-	}
-	
-	function deleteKey(beamline, key){
-		$.ajax({
-		    url: base+'/'+beamline+'/keys/'+key,
-		    type: 'DELETE',
-		    success: function(result) {
-		    }
-		});
-	}
-	
-	function addBeamline(beamline){
-		getKeys(beamline); /*create beamline*/
-		getBeamlines();
-	}
-	
-	function deleteBeamline(beamline){
-		$.ajax({
-		    url: base+'/'+beamline,
-		    type: 'DELETE',
-		    success: function(result) {
-		    	getBeamlines(); /* Update beamline list */
-		    }
-		});
-		
-	}
-	
 </script>
 </head>
 <body>
-	<!-- <script>
-        var source = new EventSource('../server-sent-events/');
-        source.onmessage = function(e) {
-        	$('#messagefield') = e.data;
-        };
-        </script> -->
-
-	<!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
-
-	<!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
-
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
 				<a class="btn btn-navbar" data-toggle="collapse"
 					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 					class="icon-bar"></span> <span class="icon-bar"></span>
-				</a> <a class="brand" href="#">hub</a>
+				</a> <a class="brand" href="#">Stream</a>
 			</div>
 		</div>
 	</div>
@@ -172,16 +102,16 @@ body {
 		<!-- Example row of columns -->
 		<div class="row">
 			<div class="span5">
-				<h2>Key Group</h2>
-				<div>
+				<h2>Streams</h2>
+				<!-- <div>
 					<select id="selectionBeamline">
-						<!-- <option value="sydney">Sydney</option> -->
+						<option value="sydney">Sydney</option>
 					</select>
-				</div>
-				<div id="beamlineKeys"></div>
+				</div> -->
+				<div id="streams"></div>
 			</div>
 		</div>
-		<div class="row">
+		<!-- <div class="row">
 			<div class="span5">
 				<h2>Key Group Management</h2>
 				<div class="input-append">
@@ -190,12 +120,12 @@ body {
 					  <button id="addBeamlineBtn" class="btn" type="button" onclick="deleteBeamline($(this).prev().prev().val());$(this).prev().prev().val('')">Delete</button>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 		<hr>
 
 		<footer>
-			<p>Hub - Version <span id='version'></span> - &copy; Paul Scherrer Institute 2013</p>
+			<p>Stream - Version <span id='version'></span> - &copy; Paul Scherrer Institute 2013</p>
 		</footer>
 
 	</div>
@@ -204,8 +134,7 @@ body {
 	<script>
 		/* update beamlines */
 		getVersion();
-		getBeamlines();
-		$('#selectionBeamline').change(function(){connectStream($('#selectionBeamline').val())});
+		getStreams();
 	</script>
 
 	
