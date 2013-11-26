@@ -47,7 +47,7 @@ public class FileSender {
 	
 	private String path = "";
 	private String header = "";
-	private boolean wipe = true;
+	private boolean wipe = false;
 	private int sendCount = 0;
 	
 	public FileSender(int port, boolean wipe){
@@ -102,7 +102,7 @@ public class FileSender {
 	}
 	public void setHeader(Map<String, String> header) {
 		
-		if(header.isEmpty()){
+		if(header==null || header.isEmpty()){
 			this.header="";
 			return;
 		}

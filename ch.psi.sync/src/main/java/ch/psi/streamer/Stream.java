@@ -53,7 +53,7 @@ public class Stream {
 		wdog = new DirectoryWatchDog(bus);
 		sender = new FileSender(request.getPort(), request.isWipeFile());
 		
-		logger.info("Start streaming ...");
+		logger.info("Start streaming [Options: wipe="+request.isWipeFile()+"] ...");
 		sender.setPath(request.getDestinationPath());
 		sender.setHeader(request.getHeader());
 		sender.start();

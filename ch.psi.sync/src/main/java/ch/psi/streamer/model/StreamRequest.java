@@ -34,7 +34,7 @@ public class StreamRequest {
 	private Map<String,String> header;
 	
 	private int port = 8888;
-	private boolean wipeFile = false;
+	private boolean wipeFile = true;
 	
 	public int getPort() {
 		return port;

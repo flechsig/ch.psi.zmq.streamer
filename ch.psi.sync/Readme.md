@@ -41,18 +41,21 @@ The project is build via Maven. The installation zip package can be build by exe
 After the build the zip file will be inside the `target` directory.
 
 ## REST API
-Get list of active streams
-
-```
-GET stream
-200 - [ ]
-```
 
 Get version of server
 
 ```
 GET version
 200 - 0.0.0
+```
+
+Get list of active streams
+
+```
+GET stream
+Accept: application/json
+
+200 - [ ]
 ```
 
 Start new stream
@@ -66,11 +69,10 @@ PUT stream/{id}
     "destinationPath":"ttt",
 
     "numberOfImages":0,
-    "destinationPath":"",
     "header":{},
 
     "port":8888,
-    "wipeFile":"true"
+    "wipeFile":"false"
     
 }
 

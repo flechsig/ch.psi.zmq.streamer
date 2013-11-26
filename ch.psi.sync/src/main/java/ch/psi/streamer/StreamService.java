@@ -32,6 +32,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.glassfish.jersey.media.sse.EventOutput;
+import org.glassfish.jersey.media.sse.OutboundEvent;
+import org.glassfish.jersey.media.sse.SseBroadcaster;
+import org.glassfish.jersey.media.sse.SseFeature;
+
 import ch.psi.streamer.model.StreamRequest;
 
 @Path("/")
@@ -41,6 +46,9 @@ public class StreamService {
 
 	@Inject
 	private StreamMap streams;
+	
+	@Inject
+	private SseBroadcaster broadcaster;
 	
 	@GET
     @Path("version")
@@ -72,6 +80,14 @@ public class StreamService {
 		Stream stream = new Stream();
 		stream.stream(request);
 		streams.put(trackingid, stream);
+		
+		// Broadcast new stream list
+		OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
+        OutboundEvent event = eventBuilder.name("message")
+            .mediaType(MediaType.APPLICATION_JSON_TYPE)
+            .data(List.class, getStreams())
+            .build();
+        broadcaster.broadcast(event);
 	}
 	
 	/**
@@ -87,6 +103,14 @@ public class StreamService {
 		}
 		stream.stop();
 		streams.remove(trackingid);
+		
+		// Broadcast new stream list
+		OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
+        OutboundEvent event = eventBuilder.name("message")
+            .mediaType(MediaType.APPLICATION_JSON_TYPE)
+            .data(List.class, getStreams())
+            .build();
+        broadcaster.broadcast(event);
 	}
 	
 	@GET
@@ -94,6 +118,16 @@ public class StreamService {
 	public List<String> getStreams(){
 		return(new ArrayList<>(streams.keySet()));
 	}
+	
+	
+	@GET
+    @Path("stream")
+    @Produces(SseFeature.SERVER_SENT_EVENTS)
+    public EventOutput subscribe() {
+        EventOutput eventOutput = new EventOutput();
+        broadcaster.add(eventOutput);
+        return eventOutput;
+    }
 	
 //	/**
 //	 * Get information of the stream

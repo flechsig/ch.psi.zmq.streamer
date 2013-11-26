@@ -25,7 +25,7 @@ body {
 <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 <script src="js/jquery-2.0.0.min.js"></script>
 <script type='text/javascript'>
-	var base = '../';
+	var base = '..';
 	var stream;
 
 	function getVersion() {
@@ -36,14 +36,14 @@ body {
 	}
 	
 	function getStreams() {
-		$.get(base+'stream', function(data) {
+		$.get(base+'/stream', function(data) {
 			updateStreams(data);
-		});
+		}, 'json');
 	}
 	
 	function deleteStream(id){
 		$.ajax({
-		    url: base+'/beamline/'+id,
+		    url: base+'/stream/'+id,
 		    type: 'DELETE',
 		    success: function(result) {
 		    }
@@ -53,22 +53,50 @@ body {
 	function newStream(){
 		config = new Object();
 		
-		config.searchPath;
-		config.searchPattern;
-		config.destinationPath;
-		config.numberOfImages;
-		config.header;
-		config.port;
-		config.wipeFile;
+		value=$('#s_searchPath').val();
+		if(value!=null && value!=''){
+			config.searchPath=value;
+		}
+		value=$('#s_searchPattern').val();
+		if(value!=null && value!=''){
+			config.searchPattern=value;
+		}
+		value=$('#s_destinationPath').val();
+		if(value!=null && value!=''){
+			config.destinationPath=value;
+		}
+		value=$('#s_numberOfImages').val();
+		if(value!=null && value!=''){
+			config.numberOfImages=value;
+		}
+		value=$('#s_header').val();
+		if(value!=null && value!=''){
+			config.header=value;
+		}
+		value=$('#s_port').val();
+		if(value!=null && value!=''){
+			config.port=value;
+		}
+		value=$('#s_wipe').val();
+		if(value!=null && value!=''){
+			config.wipeFile=value;
+		}
 		
-		addStream($('#s_id'));
+		addStream($('#s_id').val(), config);
+	}
+	
+	function setAttribute(field, value){
+		if(value!=null && value!=''){
+			field = value;
+		}
 	}
 	
 	function addStream(id, config){
 		$.ajax({
 		    url: base+'/stream/'+id,
+		    contentType: "application/json",
 		    type: 'PUT',
-		    data: config,
+		    data: JSON.stringify(config),
 		    success: function(result) {
 		    }
 		});
@@ -78,13 +106,13 @@ body {
 	function updateStreams(streams){
 		keytag = $('#streams');
 		keytag.empty();
-		table='<table class="table table-hover"><thead><tr><td>Stream</td></tr></thead><tbody>';
+		table='<table class="table table-hover"><tbody>';
 		
 		for(k in streams){
-			table=table+'<tr><td>'+k+'</td><td>'+
-			'<div class="input-append">'+
-			'<button class="btn" type="button" onclick="deleteStream(\''+d+'\')">Delete</button>'+
-			'</div>'+
+			table=table+'<tr><td>'+streams[k]+'</td><td>'+
+			/* '<div class="input-append">'+ */
+			'<button class="btn" type="button" onclick="deleteStream(\''+streams[k]+'\')">Delete</button>'+
+			/* '</div>'+ */
 			'</td></tr>';
 		}
 		
@@ -123,7 +151,7 @@ body {
 			<div class="span6">
 				<h2>New Stream</h2>
 				<div class="span3">
-				      <input class="span3" id="s_id" placeholder="Id" type="text">
+				      <input class="span3" id="s_id" placeholder="TrackingId" type="text">
 					  <input class="span3" id="s_searchPath" placeholder="Search Path" type="text">
 					  <input class="span3" id="s_searchPattern" placeholder="Search Pattern" type="text">
 					  <input class="span3" id="s_destinationPath" placeholder="Destination Path" type="text">
