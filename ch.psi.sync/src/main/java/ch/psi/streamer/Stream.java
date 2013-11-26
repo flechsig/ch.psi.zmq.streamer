@@ -55,6 +55,7 @@ public class Stream {
 		
 		logger.info("Start streaming ...");
 		sender.setPath(request.getDestinationPath());
+		sender.setHeader(request.getHeader());
 		sender.start();
 		bus.register(sender);
 		

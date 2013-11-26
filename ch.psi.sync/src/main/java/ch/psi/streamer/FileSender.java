@@ -21,6 +21,7 @@ package ch.psi.streamer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,6 +46,7 @@ public class FileSender {
 	private ZMQ.Socket socket;
 	
 	private String path = "";
+	private String header = "";
 	private boolean wipe = true;
 	private int sendCount = 0;
 	
@@ -64,7 +66,9 @@ public class FileSender {
 	@Subscribe
 	public void onFile(Path file){
 		logger.info("Sending file: "+file);
-		socket.sendMore("{\"filename\" : \""+file.getFileName()+"\", \"path\":\""+path+"\", \"htype\":\"pilatus-1.0\"}");
+		// We add the (additional) header information first in case it also specifies a standard header key
+		// We do so because in JSON if 2 keys are same in a map the last one wins
+		socket.sendMore("{"+header+"\"filename\":\""+file.getFileName()+"\",\"path\":\""+path+"\",\"htype\":\"pilatus-1.0\"}");
 		try {
 			socket.send(Files.readAllBytes(file));
 			sendCount++;
@@ -92,5 +96,26 @@ public class FileSender {
 	}
 	public int getSendCount() {
 		return sendCount;
+	}
+	public String getHeader() {
+		return header;
+	}
+	public void setHeader(Map<String, String> header) {
+		
+		if(header.isEmpty()){
+			this.header="";
+			return;
+		}
+		
+		StringBuilder b = new StringBuilder();
+		for(String k:header.keySet()){
+			b.append("\"");
+			b.append(k);
+			b.append("\":\"");
+			b.append(header.get(k));
+			b.append("\"");
+			b.append(",");
+		}
+		this.header = b.toString();
 	}
 }

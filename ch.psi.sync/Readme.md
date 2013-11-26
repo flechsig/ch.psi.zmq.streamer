@@ -37,8 +37,8 @@ Usage: streamer
 # Development
 
 ## Build
-The streamer installation zip package can be build by executing `mvn clean compile assembly:assembly` . 
-This command will create the installable zip inside the `target` directory.
+The project is build via Maven. The installation zip package can be build by executing `mvn clean compile assembly:assembly` . 
+After the build the zip file will be inside the `target` directory.
 
 ## REST API
 Get list of active streams
