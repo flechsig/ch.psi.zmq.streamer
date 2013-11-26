@@ -50,6 +50,19 @@ body {
 		});
 	}
 	
+	function newStream(){
+		config = new Object();
+		
+		config.searchPath;
+		config.searchPattern;
+		config.destinationPath;
+		config.numberOfImages;
+		config.header;
+		config.port;
+		config.wipeFile;
+		
+		addStream($('#s_id'));
+	}
 	
 	function addStream(id, config){
 		$.ajax({
@@ -103,24 +116,28 @@ body {
 		<div class="row">
 			<div class="span5">
 				<h2>Streams</h2>
-				<!-- <div>
-					<select id="selectionBeamline">
-						<option value="sydney">Sydney</option>
-					</select>
-				</div> -->
 				<div id="streams"></div>
 			</div>
 		</div>
-		<!-- <div class="row">
-			<div class="span5">
-				<h2>Key Group Management</h2>
-				<div class="input-append">
-					  <input class="span2" id="appendedInputButton" placeholder="Key Group" type="text">
-					  <button id="addBeamlineBtn" class="btn" type="button" onclick="addBeamline($(this).prev().val());$(this).prev().val('')">Add</button>
-					  <button id="addBeamlineBtn" class="btn" type="button" onclick="deleteBeamline($(this).prev().prev().val());$(this).prev().prev().val('')">Delete</button>
+		<div class="row">
+			<div class="span6">
+				<h2>New Stream</h2>
+				<div class="span3">
+				      <input class="span3" id="s_id" placeholder="Id" type="text">
+					  <input class="span3" id="s_searchPath" placeholder="Search Path" type="text">
+					  <input class="span3" id="s_searchPattern" placeholder="Search Pattern" type="text">
+					  <input class="span3" id="s_destinationPath" placeholder="Destination Path" type="text">
+					  <input class="span3" id="s_numberOfImages" placeholder="Number of Images" type="text">
+					  <input class="span3" id="s_header" placeholder="Header" type="text">
+					  <input class="span3" id="s_port" placeholder="Port" type="text">
+					  <input class="span3" id="s_wipe" placeholder="Wipe File" type="text">
 				</div>
+				<div class="span2">
+				<button id="addStreamBtn" class="btn" type="button" onclick="newStream()">Add</button>
 			</div>
-		</div> -->
+			</div>
+			
+		</div>
 
 		<hr>
 
