@@ -119,6 +119,25 @@ body {
 		table = table+'</table></tbody>';
 		keytag.append(table);
 	}
+	
+	var stream
+	function connectStream() {
+		closeStream();
+		stream = new EventSource(base + '/stream');
+		stream.addEventListener('stream', function(event) {
+			jdata = JSON.parse(event.data)
+			updateStreams(jdata);
+			
+		}, false);
+	}
+
+	function closeStream() {
+		try {
+			stream.close();
+		} catch (e) {
+		}
+	}
+	
 </script>
 </head>
 <body>
@@ -180,6 +199,7 @@ body {
 		/* update beamlines */
 		getVersion();
 		getStreams();
+		connectStream();
 	</script>
 
 	

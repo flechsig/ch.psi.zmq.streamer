@@ -83,7 +83,7 @@ public class StreamService {
 		
 		// Broadcast new stream list
 		OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
-        OutboundEvent event = eventBuilder.name("message")
+        OutboundEvent event = eventBuilder.name("stream")
             .mediaType(MediaType.APPLICATION_JSON_TYPE)
             .data(List.class, getStreams())
             .build();
@@ -106,7 +106,7 @@ public class StreamService {
 		
 		// Broadcast new stream list
 		OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
-        OutboundEvent event = eventBuilder.name("message")
+        OutboundEvent event = eventBuilder.name("stream")
             .mediaType(MediaType.APPLICATION_JSON_TYPE)
             .data(List.class, getStreams())
             .build();

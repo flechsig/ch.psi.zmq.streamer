@@ -58,6 +58,26 @@ Accept: application/json
 200 - [ ]
 ```
 
+Register for stream changes 
+
+```
+GET events
+ 
+200 - Server Send Event (SSE) stream.
+```
+
+****
+
+Messages currently supported:
+
+* **stream** - list of current streams
+
+    ```
+    [ ]
+```
+
+****
+
 Start new stream
 
 ```
