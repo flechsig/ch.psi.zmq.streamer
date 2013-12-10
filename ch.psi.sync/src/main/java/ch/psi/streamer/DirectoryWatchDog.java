@@ -24,25 +24,29 @@ public class DirectoryWatchDog {
 	private EventBus ebus;
 	
 	private WatchService watchService;
+	
+	private int count = 0; // detection count
 
 	@Inject
 	public DirectoryWatchDog(EventBus ebus){
 		this.ebus = ebus;
 	}
 	
-	public void watch(Path path) throws IOException, InterruptedException{
-		watch(path, "glob:*");
+	public void watch(Path path, int dcount) throws IOException, InterruptedException{
+		watch(path, "glob:*", dcount);
 	}
 	
 	/**
 	 * Watch a given path (i.e. directory) for new files which match a given pattern
 	 * 
 	 * @param path		Directory to watch
+	 * @param dcount	Detection count - number of detection after which watchdog will terminate himselve. If <=0 detection count not set
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-    public void watch(Path path, String pattern) throws IOException, InterruptedException {
+    public void watch(Path path, String pattern, int dcount) throws IOException, InterruptedException {
     	watch=true;
+    	count = 0;
     	try{
     		watchService = FileSystems.getDefault().newWatchService();
             path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
@@ -76,6 +80,13 @@ public class DirectoryWatchDog {
 
                     if(matcher.matches(filename)){
                     	ebus.post(path.resolve(filename));
+                    	count++;
+                    	
+                    	// Auto termination
+                    	if(dcount>0&&count==dcount){
+                    		watch=false;
+                    		break;
+                    	}
                     }
                 }
 

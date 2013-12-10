@@ -70,7 +70,7 @@ public class Stream {
 			@Override
 			public void run() {
 				try {
-					wdog.watch(FileSystems.getDefault().getPath(request.getSearchPath()), request.getSearchPattern());
+					wdog.watch(FileSystems.getDefault().getPath(request.getSearchPath()), request.getSearchPattern(), request.getNumberOfImages());
 				} catch (IOException | InterruptedException e) {
 					throw new RuntimeException("Unable to start watching path",e);
 				}
