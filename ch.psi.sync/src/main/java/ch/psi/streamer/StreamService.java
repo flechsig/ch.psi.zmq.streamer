@@ -119,7 +119,13 @@ public class StreamService {
 	@GET
 	@Path("stream/{trackingid}")
 	public StreamStatus getStreamStatus(@PathParam("trackingid") final String trackingid){
-		return streams.get(trackingid).getStatus();
+		
+		Stream stream = streams.get(trackingid);
+		if(stream==null){
+			throw new NotFoundException();
+		}
+		
+		return stream.getStatus();
 	}
 	
 	/**

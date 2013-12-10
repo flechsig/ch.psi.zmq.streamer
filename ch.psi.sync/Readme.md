@@ -117,6 +117,7 @@ Get Stream status (messages sent)
 ```
 GET stream/{id}
 
+404 Not found - If stream does not exist (anymore)
 200 
 {
     "sendCount": 0
