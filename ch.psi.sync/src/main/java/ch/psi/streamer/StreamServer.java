@@ -31,16 +31,24 @@ public class StreamServer {
 	public static void main(String[] args) throws IOException, ParseException {
 
 		int webserverPort = 8080;
+		String hostname;
 		
 		Options options = new Options();
 		options.addOption("h", false, "Help");
 		options.addOption("p", true, "Webserver port (default: "+webserverPort+")");
+		options.addOption("s", true, "Webserver ip");
 
 		GnuParser parser = new GnuParser();
 		CommandLine line = parser.parse(options, args);
 
 		if (line.hasOption("p")) {
 			webserverPort = Integer.parseInt(line.getOptionValue("p"));
+		}
+		if (line.hasOption("s")) {
+			hostname=line.getOptionValue("s");
+		}
+		else{
+			hostname = InetAddress.getLocalHost().getHostName();
 		}
 		if (line.hasOption("h")) {
 			HelpFormatter f = new HelpFormatter();
@@ -50,7 +58,7 @@ public class StreamServer {
 
 		
 		
-		URI baseUri = UriBuilder.fromUri("http://" + InetAddress.getLocalHost().getHostName() + "/").port(webserverPort).build();
+		URI baseUri = UriBuilder.fromUri("http://" + hostname + "/").port(webserverPort).build();
 
 		ResourceConfig resourceConfig = new ResourceConfig(SseFeature.class, JacksonFeature.class);
 		resourceConfig.register(StreamService.class);
