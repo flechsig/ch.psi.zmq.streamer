@@ -77,6 +77,10 @@ body {
 		if(value!=null && value!=''){
 			config.port=value;
 		}
+		value=$('#s_highWaterMark').val();
+		if(value!=null && value!=''){
+			config.highWaterMark=value;
+		}
 		value=$('#s_wipe').val();
 		if(value!=null && value!=''){
 			config.wipeFile=value;
@@ -172,6 +176,7 @@ body {
 					  <input class="span3" id="s_numberOfImages" placeholder="Number of Images" type="text">
 					  <input class="span3" id="s_header" placeholder="Header" type="text">
 					  <input class="span3" id="s_port" placeholder="Port" type="text">
+					  <input class="span3" id="s_highWaterMark" placeholder="High Water Mark" type="text">
 					  <input class="span3" id="s_wipe" placeholder="Wipe File" type="text">
 				</div>
 				<div class="span2">
