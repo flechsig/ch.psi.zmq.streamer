@@ -114,14 +114,27 @@ DELETE stream/{id}
 
 ### Command Line
 
+Create stream
+
 ```
-# Create stream
 curl -XPUT --data '{"searchPath":"/Users/ebner/Desktop/Test", "searchPattern":"glob:*","destinationPath":"something"}' --header "Content-Type: application/json" http://<hostname>:<port>/stream/id
+```
 
-# Stop stream
+Stop stream
+
+```
 curl -XDELETE http://<hostname>:<port>/stream/id
+```
 
-# Get active streams
+Get active streams (monitor)
+
+```
+curl -H "Accept: application/json" http://<hostname>:<port>/stream
+```
+
+Get active streams (monitor)
+
+```
 curl http://<hostname>:<port>/stream
 ```
 
