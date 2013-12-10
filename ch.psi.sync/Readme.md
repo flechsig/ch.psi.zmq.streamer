@@ -112,6 +112,17 @@ DELETE stream/{id}
 200 - Success
 ```
 
+Get Stream status (messages sent)
+
+```
+GET stream/{id}
+
+200 
+{
+    "sendCount": 0
+}
+```
+
 ### Command Line
 
 Create stream
@@ -124,6 +135,12 @@ Stop stream
 
 ```
 curl -XDELETE http://<hostname>:<port>/stream/id
+```
+
+Get stream status
+
+```
+curl http://<hostname>:<port>/stream/id
 ```
 
 Get active streams (monitor)

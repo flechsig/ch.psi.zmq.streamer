@@ -27,6 +27,9 @@ import java.util.logging.Logger;
 
 import org.jeromq.ZMQ;
 
+import ch.psi.streamer.model.SendCount;
+
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 /**
@@ -49,9 +52,13 @@ public class FileSender {
 	private String path = "";
 	private String header = "";
 	private boolean wipe = false;
-	private int sendCount = 0;
+	private int count = 0;
 	
-	public FileSender(int port, long highWaterMark, boolean wipe){
+	private EventBus statusBus;
+	
+	public FileSender(EventBus statusBus, int port, long highWaterMark, boolean wipe){
+		this.statusBus = statusBus;
+		
 		this.port = port;
 		this.wipe = wipe;
 		this.highWaterMark=highWaterMark;
@@ -63,7 +70,7 @@ public class FileSender {
 		socket.setHWM(highWaterMark);
 		socket.bind("tcp://*:"+port);
 		
-		sendCount=0;
+		count = 0;
 	}
 	
 	@Subscribe
@@ -74,7 +81,8 @@ public class FileSender {
 		socket.sendMore("{"+header+"\"filename\":\""+file.getFileName()+"\",\"path\":\""+path+"\",\"htype\":\"pilatus-1.0\"}");
 		try {
 			socket.send(Files.readAllBytes(file));
-			sendCount++;
+			count++;
+			statusBus.post(new SendCount(count));
 			if(wipe){
 				Files.delete(file);
 			}
@@ -97,8 +105,11 @@ public class FileSender {
 	public boolean isWipe() {
 		return wipe;
 	}
-	public int getSendCount() {
-		return sendCount;
+	/**
+	 * @return Number of messages/files send
+	 */
+	public int getCount() {
+		return count;
 	}
 	public String getHeader() {
 		return header;

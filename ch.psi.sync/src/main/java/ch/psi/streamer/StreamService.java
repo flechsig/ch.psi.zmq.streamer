@@ -37,7 +37,11 @@ import org.glassfish.jersey.media.sse.OutboundEvent;
 import org.glassfish.jersey.media.sse.SseBroadcaster;
 import org.glassfish.jersey.media.sse.SseFeature;
 
+import com.google.common.eventbus.Subscribe;
+
+import ch.psi.streamer.model.SendCount;
 import ch.psi.streamer.model.StreamRequest;
+import ch.psi.streamer.model.StreamStatus;
 
 @Path("/")
 public class StreamService {
@@ -68,7 +72,7 @@ public class StreamService {
 	 */
 	@PUT
 	@Path("stream/{trackingid}")
-	public void stream(@PathParam("trackingid") String trackingid, StreamRequest request){
+	public void stream(@PathParam("trackingid") final String trackingid, final StreamRequest request){
 		// TODO #frames to take, map header info, path
 		
 		if(streams.containsKey(trackingid)){
@@ -77,9 +81,31 @@ public class StreamService {
 			s.stop();
 		}
 		
-		Stream stream = new Stream();
+		final Stream stream = new Stream();
 		stream.stream(request);
 		streams.put(trackingid, stream);
+		
+		// Auto termination
+		stream.getStatusBus().register( new Object(){
+			@Subscribe
+			public void onSend(SendCount status){
+				if(request.getNumberOfImages()>0 && status.getCount()==request.getNumberOfImages()){
+					logger.info("Reached image "+status.getCount()+" of "+request.getNumberOfImages()+". Stopping streaming");
+					stream.stop();
+					streams.remove(trackingid);
+					
+					// Broadcast new stream list
+					OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
+			        OutboundEvent event = eventBuilder.name("stream")
+			            .mediaType(MediaType.APPLICATION_JSON_TYPE)
+			            .data(List.class, getStreams())
+			            .build();
+			        broadcaster.broadcast(event);
+				}
+			}
+		});
+		
+		
 		
 		// Broadcast new stream list
 		OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
@@ -88,6 +114,12 @@ public class StreamService {
             .data(List.class, getStreams())
             .build();
         broadcaster.broadcast(event);
+	}
+	
+	@GET
+	@Path("stream/{trackingid}")
+	public StreamStatus getStreamStatus(@PathParam("trackingid") final String trackingid){
+		return streams.get(trackingid).getStatus();
 	}
 	
 	/**

@@ -27,6 +27,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.eventbus.EventBus;
+
 import ch.psi.streamer.FileReceiver;
 import ch.psi.streamer.FileSender;
 
@@ -43,7 +45,7 @@ public class FileReceiverTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		sender = new FileSender(8080, 100, false);
+		sender = new FileSender(new EventBus(), 8080, 100, false);
 		receiver = new FileReceiver("emac", 8080, "target");
 	}
 

@@ -25,6 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import ch.psi.streamer.model.StreamRequest;
+import ch.psi.streamer.model.StreamStatus;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
@@ -43,15 +44,21 @@ public class Stream {
 	private DirectoryWatchDog wdog;
 	private ExecutorService wdogExecutor = Executors.newSingleThreadExecutor();
 	private FileSender sender;
+	private EventBus statusBus;
 	
 	/**
 	 * Start streaming data out to ZMQ
 	 */
 	public void stream(final StreamRequest request){
 		
+		statusBus = new AsyncEventBus(Executors.newSingleThreadExecutor());
+		statusBus.register(this);
+		
 		bus = new AsyncEventBus(Executors.newSingleThreadExecutor());
 		wdog = new DirectoryWatchDog(bus);
-		sender = new FileSender(request.getPort(), request.getHighWaterMark(), request.isWipeFile());
+		sender = new FileSender(statusBus, request.getPort(), request.getHighWaterMark(), request.isWipeFile());
+		
+		
 		
 		logger.info("Start streaming [Options: wipe="+request.isWipeFile()+"] ...");
 		sender.setPath(request.getDestinationPath());
@@ -92,4 +99,11 @@ public class Stream {
 		logger.info("Streaming terminated");
 	}
 	
+	public EventBus getStatusBus(){
+		return statusBus;
+	}
+	
+	public StreamStatus getStatus(){
+		return new StreamStatus(sender.getCount());
+	}
 }
