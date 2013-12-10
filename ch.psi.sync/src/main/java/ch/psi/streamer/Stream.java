@@ -51,7 +51,7 @@ public class Stream {
 		
 		bus = new AsyncEventBus(Executors.newSingleThreadExecutor());
 		wdog = new DirectoryWatchDog(bus);
-		sender = new FileSender(request.getPort(), request.isWipeFile());
+		sender = new FileSender(request.getPort(), request.getHighWaterMark(), request.isWipeFile());
 		
 		logger.info("Start streaming [Options: wipe="+request.isWipeFile()+"] ...");
 		sender.setPath(request.getDestinationPath());

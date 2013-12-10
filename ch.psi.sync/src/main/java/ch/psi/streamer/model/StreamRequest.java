@@ -34,6 +34,7 @@ public class StreamRequest {
 	private Map<String,String> header;
 	
 	private int port = 8888;
+	private long highWaterMark = 1000;
 	private boolean wipeFile = true;
 	
 	public int getPort() {
@@ -41,6 +42,12 @@ public class StreamRequest {
 	}
 	public void setPort(int port) {
 		this.port = port;
+	}
+	public long getHighWaterMark() {
+		return highWaterMark;
+	}
+	public void setHighWaterMark(long highWaterMark) {
+		this.highWaterMark = highWaterMark;
 	}
 	public boolean isWipeFile() {
 		return wipeFile;

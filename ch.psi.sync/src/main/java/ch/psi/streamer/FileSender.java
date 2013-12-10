@@ -42,6 +42,7 @@ public class FileSender {
 	private static final Logger logger = Logger.getLogger(FileSender.class.getName());
 	
 	private int port;
+	private long highWaterMark;
 	private ZMQ.Context context;
 	private ZMQ.Socket socket;
 	
@@ -50,14 +51,16 @@ public class FileSender {
 	private boolean wipe = false;
 	private int sendCount = 0;
 	
-	public FileSender(int port, boolean wipe){
+	public FileSender(int port, long highWaterMark, boolean wipe){
 		this.port = port;
 		this.wipe = wipe;
+		this.highWaterMark=highWaterMark;
 	}
 	
 	public void start(){
 		context = ZMQ.context(1);
 		socket = context.socket(ZMQ.PUSH);
+		socket.setHWM(highWaterMark);
 		socket.bind("tcp://*:"+port);
 		
 		sendCount=0;
