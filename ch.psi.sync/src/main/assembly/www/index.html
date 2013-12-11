@@ -71,7 +71,7 @@ body {
 		}
 		value=$('#s_header').val();
 		if(value!=null && value!=''){
-			config.header=value;
+			config.header=JSON.parse(value);
 		}
 		value=$('#s_port').val();
 		if(value!=null && value!=''){
