@@ -65,16 +65,21 @@ body {
 			//config.searchPattern=value;
 			spattern=value;
 		}
-		config.source=[{"searchPath":spath, "searchPattern":spattern}];
-		
+		dpath='';
 		value=$('#s_destinationPath').val();
 		if(value!=null && value!=''){
-			config.destinationPath=value;
+			//config.destinationPath=value;
+			dpath=value
 		}
+		nimage=0;
 		value=$('#s_numberOfImages').val();
 		if(value!=null && value!=''){
-			config.numberOfImages=value;
+			//config.numberOfImages=value;
+			nimage=parseInt(value)
 		}
+		
+		config.source=[{"searchPath":spath, "searchPattern":spattern, "destinationPath":dpath, "numberOfImages":nimage}];
+		
 		value=$('#s_header').val();
 		if(value!=null && value!=''){
 			config.header=JSON.parse(value);

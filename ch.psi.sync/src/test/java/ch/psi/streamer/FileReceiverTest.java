@@ -61,7 +61,7 @@ public class FileReceiverTest {
 			public void run() {
 				System.out.println("re");
 				sender.start();
-				sender.onFile(FileSystems.getDefault().getPath("src/test/resources/testfile.png"));
+				sender.onFile(new DetectedFile(FileSystems.getDefault().getPath("src/test/resources/testfile.png"),""));
 				sender.terminate();
 				
 				receiver.terminate();

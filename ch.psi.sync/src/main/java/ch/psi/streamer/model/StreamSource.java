@@ -25,6 +25,9 @@ public class StreamSource {
 	private String searchPath = "/";
 	private String searchPattern = "glob:*";
 	
+	private String destinationPath = "";
+	private int numberOfImages = 0;
+	
 	public String getSearchPath() {
 		return searchPath;
 	}
@@ -36,5 +39,17 @@ public class StreamSource {
 	}
 	public void setSearchPattern(String searchPattern) {
 		this.searchPattern = searchPattern;
+	}
+	public String getDestinationPath() {
+		return destinationPath;
+	}
+	public void setDestinationPath(String destinationPath) {
+		this.destinationPath = destinationPath;
+	}
+	public int getNumberOfImages() {
+		return numberOfImages;
+	}
+	public void setNumberOfImages(int numberOfImages) {
+		this.numberOfImages = numberOfImages;
 	}
 }

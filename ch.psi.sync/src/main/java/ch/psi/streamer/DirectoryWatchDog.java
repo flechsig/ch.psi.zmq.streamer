@@ -33,9 +33,9 @@ public class DirectoryWatchDog {
 		this.ebus = ebus;
 	}
 	
-	public void watch(Path path, int dcount) throws IOException, InterruptedException{
-		watch(path, "glob:*", dcount);
-	}
+//	public void watch(Path path, int dcount) throws IOException, InterruptedException{
+//		watch(path, "glob:*", "", dcount);
+//	}
 	
 	/**
 	 * Watch a given path (i.e. directory) for new files which match a given pattern
@@ -45,7 +45,7 @@ public class DirectoryWatchDog {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-    public void watch(Path path, String pattern, int dcount) throws IOException, InterruptedException {
+    public void watch(Path path, String pattern, String destinationPath, int dcount) throws IOException, InterruptedException {
     	watch=true;
     	count = 0;
     	try{
@@ -83,7 +83,7 @@ public class DirectoryWatchDog {
                     logger.finest(kind + " -> " + filename);
 
                     if(matcher.matches(filename)){
-                    	ebus.post(path.resolve(filename));
+                    	ebus.post(new DetectedFile(path.resolve(filename), destinationPath));
                     	count++;
                     	
                     	// Auto termination

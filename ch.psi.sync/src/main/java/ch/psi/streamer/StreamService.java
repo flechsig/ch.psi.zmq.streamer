@@ -42,6 +42,7 @@ import com.google.common.eventbus.Subscribe;
 import ch.psi.streamer.model.SendCount;
 import ch.psi.streamer.model.StreamInfo;
 import ch.psi.streamer.model.StreamRequest;
+import ch.psi.streamer.model.StreamSource;
 
 @Path("/")
 public class StreamService {
@@ -85,12 +86,18 @@ public class StreamService {
 		stream.stream(request);
 		streams.put(trackingid, stream);
 		
+		int counter = 0;
+		for(StreamSource ss: request.getSource()){
+			counter=counter+ss.getNumberOfImages();
+		}
+		
+		final int fcounter = counter;
 		// Auto termination
 		stream.getStatusBus().register( new Object(){
 			@Subscribe
 			public void onSend(SendCount status){
-				if(request.getNumberOfImages()>0 && status.getCount()==request.getNumberOfImages()){
-					logger.info("Reached image "+status.getCount()+" of "+request.getNumberOfImages()+". Stopping streaming");
+				if(fcounter>0 && status.getCount()==fcounter){
+					logger.info("Reached image "+status.getCount()+" of "+fcounter+". Stopping streaming");
 					stream.stop();
 					streams.remove(trackingid);
 					

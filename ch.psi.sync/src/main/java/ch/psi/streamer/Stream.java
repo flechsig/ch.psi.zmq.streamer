@@ -68,7 +68,6 @@ public class Stream {
 		
 		
 		logger.info("Start streaming [Options: wipe="+request.isWipeFile()+"] ...");
-		sender.setPath(request.getDestinationPath());
 		sender.setHeader(request.getHeader());
 		sender.start();
 		bus.register(sender);
@@ -82,7 +81,7 @@ public class Stream {
 				@Override
 				public void run() {
 					try {
-						wdog.watch(FileSystems.getDefault().getPath(ssource.getSearchPath()), ssource.getSearchPattern(), request.getNumberOfImages());
+						wdog.watch(FileSystems.getDefault().getPath(ssource.getSearchPath()), ssource.getSearchPattern(), ssource.getDestinationPath(), ssource.getNumberOfImages());
 					} catch (IOException | InterruptedException e) {
 						throw new RuntimeException("Unable to start watching path",e);
 					}

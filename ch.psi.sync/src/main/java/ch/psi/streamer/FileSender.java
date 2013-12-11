@@ -49,7 +49,7 @@ public class FileSender {
 	private ZMQ.Context context;
 	private ZMQ.Socket socket;
 	
-	private String path = "";
+//	private String path = "";
 	private String header = "";
 	private boolean wipe = false;
 	private int count = 0;
@@ -74,11 +74,12 @@ public class FileSender {
 	}
 	
 	@Subscribe
-	public void onFile(Path file){
-		logger.info("Sending file: "+file);
+	public void onFile(DetectedFile dfile){
+		Path file = dfile.getPath();
+		logger.info("Sending file: "+dfile);
 		// We add the (additional) header information first in case it also specifies a standard header key
 		// We do so because in JSON if 2 keys are same in a map the last one wins
-		socket.sendMore("{"+header+"\"filename\":\""+file.getFileName()+"\",\"path\":\""+path+"\",\"htype\":\"pilatus-1.0\"}");
+		socket.sendMore("{"+header+"\"filename\":\""+file.getFileName()+"\",\"path\":\""+dfile.getDestination()+"\",\"htype\":\"pilatus-1.0\"}");
 		try {
 			socket.send(Files.readAllBytes(file));
 			count++;
@@ -96,12 +97,6 @@ public class FileSender {
 		context.term();
 	}
 
-	public String getPath() {
-		return path;
-	}
-	public void setPath(String path) {
-		this.path = path;
-	}
 	public boolean isWipe() {
 		return wipe;
 	}

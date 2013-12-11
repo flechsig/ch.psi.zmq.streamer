@@ -87,7 +87,7 @@ public class DirectoryWatchDogTest {
 			}
 		}, 1000);
 		
-		watch.watch(Paths.get(directory), pattern, 0);
+		watch.watch(Paths.get(directory), pattern, "", 0);
 		logger.info("Done");
 	}
 

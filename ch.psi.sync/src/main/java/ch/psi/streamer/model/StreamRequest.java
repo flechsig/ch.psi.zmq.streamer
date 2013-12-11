@@ -28,9 +28,7 @@ import java.util.Map;
 public class StreamRequest {
 	
 	private List<StreamSource> source;
-	
-	private int numberOfImages = 0;
-	private String destinationPath = "";
+
 	private Map<String,String> header;
 	
 	private int port = 8888;
@@ -60,18 +58,6 @@ public class StreamRequest {
 	}
 	public void setWipeFile(boolean wipeFile) {
 		this.wipeFile = wipeFile;
-	}
-	public String getDestinationPath() {
-		return destinationPath;
-	}
-	public void setDestinationPath(String destinationPath) {
-		this.destinationPath = destinationPath;
-	}
-	public int getNumberOfImages() {
-		return numberOfImages;
-	}
-	public void setNumberOfImages(int numberOfImages) {
-		this.numberOfImages = numberOfImages;
 	}
 	public Map<String, String> getHeader() {
 		return header;
