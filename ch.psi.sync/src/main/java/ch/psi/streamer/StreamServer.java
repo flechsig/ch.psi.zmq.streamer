@@ -62,7 +62,7 @@ public class StreamServer {
 
 		ResourceConfig resourceConfig = new ResourceConfig(SseFeature.class, JacksonFeature.class);
 		resourceConfig.register(StreamService.class);
-		resourceConfig.register(new ResourceBinder());
+		resourceConfig.register(new StreamServerResourceBinder());
 		HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, resourceConfig);
 
 		// Static content

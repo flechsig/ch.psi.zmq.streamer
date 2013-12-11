@@ -4,7 +4,7 @@ package ch.psi.streamer;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.media.sse.SseBroadcaster;
 
-public class ResourceBinder extends AbstractBinder {
+public class StreamServerResourceBinder extends AbstractBinder {
 
 	@Override
 	protected void configure() {
