@@ -32,6 +32,8 @@ import java.util.logging.Logger;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -98,7 +100,10 @@ public class FileReceiver {
 					continue;
 				}
 				// TODO Save content to file (in basedir)
-				String p = basedir+"/"+(String) h.get("path");
+				String p = (String) h.get("path");
+				if(!p.startsWith("/")){
+					p = basedir+"/"+p;
+				}
 				File f = new File(p);
 				if(!path.equals(p)){
 					f.mkdirs();
@@ -142,8 +147,17 @@ public class FileReceiver {
 		options.addOption("p", true, "Source port (default: "+port+")");
 		options.addOption("s", true, "Source (default: "+source+")");
 
+		@SuppressWarnings("static-access")
+		Option option = OptionBuilder.withArgName( "path" )
+        .hasArg()
+        .isRequired()
+        .withDescription( "tpath for storing files with relative destination paths" )
+        .create( "d" );
+		options.addOption(option);
+		
 		GnuParser parser = new GnuParser();
 		CommandLine line;
+		String path = ".";
 		try {
 			line = parser.parse(options, args);
 			if (line.hasOption("p")) {
@@ -157,12 +171,15 @@ public class FileReceiver {
 				f.printHelp("receiver", options);
 				return;
 			}
+			
+			path = line.getOptionValue(option.getOpt());
+			
 		} catch (ParseException e) {
 			logger.log(Level.WARNING, "Unable to parse commandline",e);
 		}
 		
 		
-		final FileReceiver r = new FileReceiver(source, port, ".");
+		final FileReceiver r = new FileReceiver(source, port, path);
 		r.receive();
 		
 		// Control+C
