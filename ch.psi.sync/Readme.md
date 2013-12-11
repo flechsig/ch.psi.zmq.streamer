@@ -112,7 +112,7 @@ DELETE stream/{id}
 200 - Success
 ```
 
-Get Stream status (messages sent)
+Get Stream information/status
 
 ```
 GET stream/{id}
@@ -120,7 +120,19 @@ GET stream/{id}
 404 Not found - If stream does not exist (anymore)
 200 
 {
-    "sendCount": 0
+    "status": {
+        "sendCount": 0
+    },
+    "configuration": {
+        "searchPath": "/Users/ebner/Desktop/test",
+        "searchPattern": "glob:*",
+        "numberOfImages": 0,
+        "destinationPath": "",
+        "header": null,
+        "port": 8888,
+        "highWaterMark": 1000,
+        "wipeFile": true
+    }
 }
 ```
 

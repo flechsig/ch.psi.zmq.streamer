@@ -40,8 +40,8 @@ import org.glassfish.jersey.media.sse.SseFeature;
 import com.google.common.eventbus.Subscribe;
 
 import ch.psi.streamer.model.SendCount;
+import ch.psi.streamer.model.StreamInfo;
 import ch.psi.streamer.model.StreamRequest;
-import ch.psi.streamer.model.StreamStatus;
 
 @Path("/")
 public class StreamService {
@@ -118,14 +118,18 @@ public class StreamService {
 	
 	@GET
 	@Path("stream/{trackingid}")
-	public StreamStatus getStreamStatus(@PathParam("trackingid") final String trackingid){
+	public StreamInfo getStreamStatus(@PathParam("trackingid") final String trackingid){
 		
 		Stream stream = streams.get(trackingid);
 		if(stream==null){
 			throw new NotFoundException();
 		}
 		
-		return stream.getStatus();
+		StreamInfo info = new StreamInfo();
+		info.setStatus(stream.getStatus());
+		info.setConfiguration(stream.getConfiguration());
+		
+		return info;
 	}
 	
 	/**

@@ -46,10 +46,14 @@ public class Stream {
 	private FileSender sender;
 	private EventBus statusBus;
 	
+	private StreamRequest configuration;
+	
 	/**
 	 * Start streaming data out to ZMQ
 	 */
 	public void stream(final StreamRequest request){
+		
+		this.configuration = request;
 		
 		statusBus = new AsyncEventBus(Executors.newSingleThreadExecutor());
 		statusBus.register(this);
@@ -105,5 +109,9 @@ public class Stream {
 	
 	public StreamStatus getStatus(){
 		return new StreamStatus(sender.getCount());
+	}
+	
+	public StreamRequest getConfiguration(){
+		return configuration;
 	}
 }
