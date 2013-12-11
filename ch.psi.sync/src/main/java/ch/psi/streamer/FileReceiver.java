@@ -21,6 +21,9 @@ package ch.psi.streamer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -75,6 +78,10 @@ public class FileReceiver {
 		ObjectMapper mapper = new ObjectMapper();
 		TypeReference<HashMap<String,Object>> typeRef = new TypeReference<HashMap<String,Object>>() {};
 		String path = "";
+		
+		// User lookup service
+		UserPrincipalLookupService lookupservice=FileSystems.getDefault().getUserPrincipalLookupService();
+		
 		while(receive){
 			try{
 				byte[] message = socket.recv();
@@ -103,6 +110,14 @@ public class FileReceiver {
 			
 				try(FileOutputStream s = new FileOutputStream(file)){
 					s.write(content);
+				}
+				
+				String username = (String) h.get("username");
+				if(h!=null){
+			        Files.setOwner(file.toPath(), lookupservice.lookupPrincipalByName(username));
+					file.setExecutable(false);
+			        file.setReadable(true);
+			        file.setWritable(true);
 				}
 				
 			} catch (IOException e) {
