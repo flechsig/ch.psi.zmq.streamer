@@ -23,9 +23,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -84,6 +87,20 @@ public class FileReceiver {
 		// User lookup service
 		UserPrincipalLookupService lookupservice=FileSystems.getDefault().getUserPrincipalLookupService();
 		
+		Set<PosixFilePermission> perms = new HashSet<PosixFilePermission>();
+        //add owners permission
+        perms.add(PosixFilePermission.OWNER_READ);
+        perms.add(PosixFilePermission.OWNER_WRITE);
+//        perms.add(PosixFilePermission.OWNER_EXECUTE);
+        //add group permissions
+//        perms.add(PosixFilePermission.GROUP_READ);
+//        perms.add(PosixFilePermission.GROUP_WRITE);
+//        perms.add(PosixFilePermission.GROUP_EXECUTE);
+        //add others permissions
+//        perms.add(PosixFilePermission.OTHERS_READ);
+//        perms.add(PosixFilePermission.OTHERS_WRITE);
+//        perms.add(PosixFilePermission.OTHERS_EXECUTE);
+		
 		while(receive){
 			try{
 				byte[] message = socket.recv();
@@ -120,9 +137,7 @@ public class FileReceiver {
 				String username = (String) h.get("username");
 				if(h!=null){
 			        Files.setOwner(file.toPath(), lookupservice.lookupPrincipalByName(username));
-					file.setExecutable(false);
-			        file.setReadable(true);
-			        file.setWritable(true);
+			        Files.setPosixFilePermissions(file.toPath(), perms);
 				}
 				
 			} catch (IOException e) {
@@ -144,27 +159,37 @@ public class FileReceiver {
 		String source = "localhost";
 		Options options = new Options();
 		options.addOption("h", false, "Help");
-		options.addOption("p", true, "Source port (default: "+port+")");
-		options.addOption("s", true, "Source (default: "+source+")");
 
 		@SuppressWarnings("static-access")
-		Option option = OptionBuilder.withArgName( "path" )
-        .hasArg()
-        .isRequired()
-        .withDescription( "tpath for storing files with relative destination paths" )
-        .create( "d" );
-		options.addOption(option);
+		Option optionP = OptionBuilder.withArgName( "port" )
+		        .hasArg()
+		        .withDescription( "Source port (default: "+port+")" )
+		        .create( "p" );
+		options.addOption(optionP);
+		
+		@SuppressWarnings("static-access")
+		Option optionS = OptionBuilder.withArgName( "source" )
+		        .hasArg()
+		        .isRequired()
+		        .withDescription( "Source address of the ZMQ stream (default port "+port+" : use -p to set the port if needed)" )
+		        .create( "s" );
+		options.addOption(optionS);
+
+		@SuppressWarnings("static-access")
+		Option optionD = OptionBuilder.withArgName( "path" )
+	        .hasArg()
+	        .isRequired()
+	        .withDescription( "tpath for storing files with relative destination paths" )
+	        .create( "d" );
+		options.addOption(optionD);
 		
 		GnuParser parser = new GnuParser();
 		CommandLine line;
 		String path = ".";
 		try {
 			line = parser.parse(options, args);
-			if (line.hasOption("p")) {
-				port = Integer.parseInt(line.getOptionValue("p"));
-			}
-			if (line.hasOption("s")) {
-				source = line.getOptionValue("s");
+			if (line.hasOption(optionP.getOpt())) {
+				port = Integer.parseInt(line.getOptionValue(optionP.getOpt()));
 			}
 			if (line.hasOption("h")) {
 				HelpFormatter f = new HelpFormatter();
@@ -172,10 +197,15 @@ public class FileReceiver {
 				return;
 			}
 			
-			path = line.getOptionValue(option.getOpt());
+			source = line.getOptionValue(optionS.getOpt());
+			path = line.getOptionValue(optionD.getOpt());
 			
 		} catch (ParseException e) {
-			logger.log(Level.WARNING, "Unable to parse commandline",e);
+//			logger.log(Level.WARNING, "Unable to parse commandline",e);
+			System.err.println(e.getMessage());
+			HelpFormatter f = new HelpFormatter();
+			f.printHelp("receiver", options);
+			System.exit(-1);
 		}
 		
 		
