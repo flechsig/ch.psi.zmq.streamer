@@ -87,11 +87,15 @@ Start new stream
 PUT stream/{id}
 
 {
-    "searchPath" : "/Users/ebner/Desktop/Test",
-    "searchPattern":"glob:*",
-    "destinationPath":"ttt",
-
-    "numberOfImages":0,
+	"source":[
+		{
+			"searchPath":"/Users/ebner/Desktop/test/one",
+			"searchPattern":"glob:*",
+			"destinationPath":"bli",
+			"numberOfImages":1
+		}
+	]
+    
     "header":{},
 
     "port":8888,
