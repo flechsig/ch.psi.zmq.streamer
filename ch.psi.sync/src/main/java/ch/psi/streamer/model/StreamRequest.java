@@ -18,6 +18,7 @@
  */
 package ch.psi.streamer.model;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,8 +27,7 @@ import java.util.Map;
  */
 public class StreamRequest {
 	
-	private String searchPath = "/";
-	private String searchPattern = "glob:*";
+	private List<StreamSource> source;
 	
 	private int numberOfImages = 0;
 	private String destinationPath = "";
@@ -37,6 +37,12 @@ public class StreamRequest {
 	private long highWaterMark = 1000;
 	private boolean wipeFile = true;
 	
+	public List<StreamSource> getSource() {
+		return source;
+	}
+	public void setSource(List<StreamSource> source) {
+		this.source = source;
+	}
 	public int getPort() {
 		return port;
 	}
@@ -54,18 +60,6 @@ public class StreamRequest {
 	}
 	public void setWipeFile(boolean wipeFile) {
 		this.wipeFile = wipeFile;
-	}
-	public String getSearchPath() {
-		return searchPath;
-	}
-	public void setSearchPath(String searchPath) {
-		this.searchPath = searchPath;
-	}
-	public String getSearchPattern() {
-		return searchPattern;
-	}
-	public void setSearchPattern(String searchPattern) {
-		this.searchPattern = searchPattern;
 	}
 	public String getDestinationPath() {
 		return destinationPath;

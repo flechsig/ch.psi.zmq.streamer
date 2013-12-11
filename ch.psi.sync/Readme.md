@@ -99,7 +99,7 @@ PUT stream/{id}
     
 }
 
-200 Stream created
+204 Stream created
 ```
 * All keys are optional except searchPath
 

@@ -53,14 +53,20 @@ body {
 	function newStream(){
 		config = new Object();
 		
+		spath='';
 		value=$('#s_searchPath').val();
 		if(value!=null && value!=''){
-			config.searchPath=value;
+			//config.searchPath=value;
+			spath=value;
 		}
+		spattern='';
 		value=$('#s_searchPattern').val();
 		if(value!=null && value!=''){
-			config.searchPattern=value;
+			//config.searchPattern=value;
+			spattern=value;
 		}
+		config.source=[{"searchPath":spath, "searchPattern":spattern}];
+		
 		value=$('#s_destinationPath').val();
 		if(value!=null && value!=''){
 			config.destinationPath=value;

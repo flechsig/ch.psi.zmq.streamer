@@ -2,6 +2,7 @@ package ch.psi.streamer;
 import java.io.IOException;
 import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.StandardWatchEventKinds;
@@ -48,6 +49,9 @@ public class DirectoryWatchDog {
     	watch=true;
     	count = 0;
     	try{
+    		// If path does not exist the path need to be created
+    		Files.createDirectories(path);
+    		
     		watchService = FileSystems.getDefault().newWatchService();
             path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
 

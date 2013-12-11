@@ -88,18 +88,8 @@ public class FileReceiver {
 		UserPrincipalLookupService lookupservice=FileSystems.getDefault().getUserPrincipalLookupService();
 		
 		Set<PosixFilePermission> perms = new HashSet<PosixFilePermission>();
-        //add owners permission
         perms.add(PosixFilePermission.OWNER_READ);
         perms.add(PosixFilePermission.OWNER_WRITE);
-//        perms.add(PosixFilePermission.OWNER_EXECUTE);
-        //add group permissions
-//        perms.add(PosixFilePermission.GROUP_READ);
-//        perms.add(PosixFilePermission.GROUP_WRITE);
-//        perms.add(PosixFilePermission.GROUP_EXECUTE);
-        //add others permissions
-//        perms.add(PosixFilePermission.OTHERS_READ);
-//        perms.add(PosixFilePermission.OTHERS_WRITE);
-//        perms.add(PosixFilePermission.OTHERS_EXECUTE);
 		
 		while(receive){
 			try{
@@ -135,7 +125,7 @@ public class FileReceiver {
 				}
 				
 				String username = (String) h.get("username");
-				if(h!=null){
+				if(username!=null){
 			        Files.setOwner(file.toPath(), lookupservice.lookupPrincipalByName(username));
 			        Files.setPosixFilePermissions(file.toPath(), perms);
 				}
