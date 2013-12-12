@@ -24,6 +24,7 @@ body {
 
 <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 <script src="js/jquery-2.0.0.min.js"></script>
+
 <script type='text/javascript'>
 	var base = '..';
 	var stream;
@@ -118,17 +119,29 @@ body {
 	}
 	
 	
+	function showInfo(tag, stream){
+		// add information for
+		$.get(base+'/stream/'+stream, function(data) {
+			$("#streaminfo").append("<pre>"+JSON.stringify(data, null, 4)+"</pre>");
+		}, 'json');
+	}
+	
+	
+	function hideInfo(tag){
+		$("#streaminfo").empty();
+	}
+	
 	function updateStreams(streams){
 		keytag = $('#streams');
 		keytag.empty();
-		table='<table class="table table-hover span6"><tbody>';
+		table='<table class="table table-hover"><tbody>';
 		
 		for(k in streams){
-			table=table+'<tr><td>'+streams[k]+'</td><td>'+
+			table=table+'<tr onmouseenter="showInfo($(\'td:last\'), \''+streams[k]+'\')" onmouseout="hideInfo($(\'td:last\'))"><td>'+streams[k]+'</td><td>'+
 			/* '<div class="input-append">'+ */
-			'<button class="btn" type="button" onclick="deleteStream(\''+streams[k]+'\')">Delete</button>'+
+			'<button class="btn pull-right" type="button" onclick="deleteStream(\''+streams[k]+'\')">Delete</button>'+
 			/* '</div>'+ */
-			'</td></tr>';
+			'</td><td></td></tr>';
 		}
 		
 		table = table+'</table></tbody>';
@@ -190,17 +203,19 @@ body {
 					  <input class="span3" id="s_highWaterMark" placeholder="High Water Mark" type="text">
 					  <input class="span3" id="s_wipe" placeholder="Wipe File" type="text">
 				</div>
+				
 				<div class="span2">
 				<button id="addStreamBtn" class="btn" type="button" onclick="newStream()">Add</button>
-			</div>
+				</div>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="span6">
 				<h2>Streams</h2>
-				<div id="streams"></div>
+				<div class="span3" id="streams"></div>
 			</div>
+			<div class="span4 pull-down" id="streaminfo"></div>
 		</div>
 
 		<hr>
