@@ -16,11 +16,12 @@ The usage of `receiver` is as follows:
 Usage: receiver
  -h         Help
  -p <arg>   Source port (default: 8888)
- -s <arg>   Source (default: localhost)
+ -s <arg>   Source address [required]
+ -d <path>	Base path [required]
 ```
 
 ## Stream Server
-The stream server can be started via the 'streamer' script locatedn in the `bin` folder.
+The stream server can be started via the 'streamer' script located in the `bin` folder.
 
 The usage of the `streamer` is as follows:
 
@@ -28,6 +29,7 @@ The usage of the `streamer` is as follows:
 Usage: streamer
  -h         Help
  -p <arg>   Webserver port (default: 8080)
+ -d <path>	Base path for monitoring files [required]
 ```
 
 ## Stream Server - UI
@@ -89,7 +91,7 @@ PUT stream/{id}
 {
 	"source":[
 		{
-			"searchPath":"/Users/ebner/Desktop/test/one",
+			"searchPath":"Desktop/test/one",
 			"searchPattern":"glob:*",
 			"destinationPath":"bli",
 			"numberOfImages":1
