@@ -18,6 +18,7 @@
  */
 package ch.psi.streamer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -50,6 +51,9 @@ public class StreamService {
 	private static final Logger logger = Logger.getLogger(StreamService.class.getName());
 
 	@Inject
+	private StreamServerConfiguration configuration;
+	
+	@Inject
 	private StreamMap streams;
 	
 	@Inject
@@ -70,10 +74,11 @@ public class StreamService {
 	 * Start streaming for a given tracking id
 	 * @param trackingid
 	 * @param path
+	 * @throws IOException 
 	 */
 	@PUT
 	@Path("stream/{trackingid}")
-	public void stream(@PathParam("trackingid") final String trackingid, final StreamRequest request){
+	public void stream(@PathParam("trackingid") final String trackingid, final StreamRequest request) throws IOException{
 		// TODO #frames to take, map header info, path
 		
 		if(streams.containsKey(trackingid)){
@@ -82,7 +87,7 @@ public class StreamService {
 			s.stop();
 		}
 		
-		final Stream stream = new Stream();
+		final Stream stream = new Stream(configuration.getBasedir());
 		stream.stream(request);
 		streams.put(trackingid, stream);
 		

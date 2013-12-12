@@ -20,6 +20,8 @@ package ch.psi.streamer;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -51,10 +53,17 @@ public class Stream {
 	
 	private StreamRequest configuration;
 	
+	private final String basedir;
+	
+	public Stream(String basedir){
+		this.basedir = basedir;
+	}
+	
 	/**
 	 * Start streaming data out to ZMQ
+	 * @throws IOException 
 	 */
-	public void stream(final StreamRequest request){
+	public void stream(final StreamRequest request) throws IOException{
 		
 		this.configuration = request;
 		
@@ -77,11 +86,16 @@ public class Stream {
 		for(final StreamSource ssource: request.getSource()){
 			final DirectoryWatchDog wdog = new DirectoryWatchDog(bus);
 			wdogs.add(wdog);
+			
+			final Path path = FileSystems.getDefault().getPath(basedir, ssource.getSearchPath());
+			// Create directory if it does not exist
+			Files.createDirectories(path);
+			
 			wdogExecutor.execute(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						wdog.watch(FileSystems.getDefault().getPath(ssource.getSearchPath()), ssource.getSearchPattern(), ssource.getDestinationPath(), ssource.getNumberOfImages());
+						wdog.watch(path, ssource.getSearchPattern(), ssource.getDestinationPath(), ssource.getNumberOfImages());
 					} catch (IOException | InterruptedException e) {
 						throw new RuntimeException("Unable to start watching path",e);
 					}

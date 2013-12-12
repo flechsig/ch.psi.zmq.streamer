@@ -11,13 +11,14 @@ import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.StaticHttpHandler;
 
@@ -33,10 +34,20 @@ public class StreamServer {
 		int webserverPort = 8080;
 		String hostname;
 		
+		StreamServerConfiguration configuration = new StreamServerConfiguration();
+		
 		Options options = new Options();
 		options.addOption("h", false, "Help");
 		options.addOption("p", true, "Webserver port (default: "+webserverPort+")");
 		options.addOption("s", true, "Webserver ip");
+		
+		@SuppressWarnings("static-access")
+		Option optionD = OptionBuilder.withArgName( "path" )
+	        .hasArg()
+	        .isRequired()
+	        .withDescription( "Base directory" )
+	        .create( "d" );
+		options.addOption(optionD);
 
 		GnuParser parser = new GnuParser();
 		CommandLine line = parser.parse(options, args);
@@ -56,13 +67,13 @@ public class StreamServer {
 			return;
 		}
 
-		
+		configuration.setBasedir(line.getOptionValue(optionD.getOpt()));
 		
 		URI baseUri = UriBuilder.fromUri("http://" + hostname + "/").port(webserverPort).build();
 
 		ResourceConfig resourceConfig = new ResourceConfig(SseFeature.class, JacksonFeature.class);
 		resourceConfig.register(StreamService.class);
-		resourceConfig.register(new StreamServerResourceBinder());
+		resourceConfig.register(new StreamServerResourceBinder(configuration));
 		HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, resourceConfig);
 
 		// Static content
