@@ -122,7 +122,8 @@ body {
 	function showInfo(tag, stream){
 		// add information for
 		$.get(base+'/stream/'+stream, function(data) {
-			$("#streaminfo").append("<pre>"+JSON.stringify(data, null, 4)+"</pre>");
+			
+			$("#streaminfo").append("<h3>Details: "+stream+"</h3><pre>"+JSON.stringify(data, null, 4)+"</pre>");
 		}, 'json');
 	}
 	
@@ -191,8 +192,10 @@ body {
 		
 		<div class="row">
 			<div class="span6">
-				<h2>New Stream</h2>
+			<div class="span6">
+				<h2>Add Stream</h2>
 				<div class="span3">
+					
 				      <input class="span3" id="s_id" placeholder="TrackingId" type="text">
 					  <input class="span3" id="s_searchPath" placeholder="Search Path" type="text">
 					  <input class="span3" id="s_searchPattern" placeholder="Search Pattern" type="text">
@@ -207,15 +210,18 @@ body {
 				<div class="span2">
 				<button id="addStreamBtn" class="btn" type="button" onclick="newStream()">Add</button>
 				</div>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="span6">
+				</div>
+				
+				<div class="span6">
 				<h2>Streams</h2>
-				<div class="span3" id="streams"></div>
+				<div class="span4" id="streams"></div>
+				</div>
 			</div>
-			<div class="span4 pull-down" id="streaminfo"></div>
+			
+			
+			<div class="span6" id="streaminfo">
+			
+			</div>
 		</div>
 
 		<hr>
