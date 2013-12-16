@@ -1,8 +1,10 @@
 package ch.psi.streamer;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
@@ -67,7 +69,15 @@ public class StreamServer {
 			return;
 		}
 
-		configuration.setBasedir(line.getOptionValue(optionD.getOpt()));
+		// Check base directory and create if it does not exist
+		String file = line.getOptionValue(optionD.getOpt());
+		File f = new File(file);
+		if(!f.exists()){
+			logger.info("Base directory '"+file+"' does not exist, will create required directories");
+			Files.createDirectories(f.toPath());
+		}
+		configuration.setBasedir(file);
+		
 		
 		URI baseUri = UriBuilder.fromUri("http://" + hostname + "/").port(webserverPort).build();
 

@@ -18,7 +18,12 @@
  */
 package ch.psi.streamer;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -183,28 +188,64 @@ public class StreamService {
         return eventOutput;
     }
 	
-//	/**
-//	 * Get information of the stream
-//	 * - #images to transfer
-//	 * - transfered so far
-//	 * - optional header entries
-//	 * 
-//	 * will return a does not exist if transfer is done
-//	 * 
-//	 * @param trackingid
-//	 */
-//	@GET
-//	@Path("{trackingid}")
-//	public void getStreamInfo(@PathParam("trackingid") String trackingid){
-//		
-//	}
-//	
-//	/**
-//	 * Get list of transfers and its status
-//	 */
-//	@GET
-//	@Path("")
-//	public void getInfo(){
-//		
-//	}
+	
+	// RAMDISK Management
+	
+	@GET
+	@Path("basedir/space")
+	public long getFreeSpace(){
+		return new File(configuration.getBasedir()).getUsableSpace();
+	}
+	
+	@GET
+	@Path("basedir/files")
+	public List<String> getFiles() throws IOException{
+		final List<String> files = new ArrayList<>();
+		final String base = configuration.getBasedir();
+		
+		Files.walkFileTree(new File(base).toPath(), new SimpleFileVisitor<java.nio.file.Path>() {
+			@Override
+			public FileVisitResult visitFile(java.nio.file.Path file, BasicFileAttributes attrs) throws IOException {
+				if (attrs.isRegularFile()) {
+		            files.add(file.toString().replaceFirst(base+"/", ""));
+		        }
+				return FileVisitResult.CONTINUE;
+			}
+		});
+		
+		return files;
+	}
+	
+	@DELETE
+	@Path("basedir/files")
+	public void deleteFiles() throws IOException{
+		final String base = configuration.getBasedir();
+		final java.nio.file.Path basedir = new File(base).toPath();
+		Files.walkFileTree(basedir, new SimpleFileVisitor<java.nio.file.Path>() {
+
+			@Override
+			public FileVisitResult visitFile(java.nio.file.Path file, BasicFileAttributes attrs) throws IOException {
+				if (attrs.isRegularFile()) {
+					logger.info("Deleting file: " + file);
+			        Files.delete(file);
+		        }
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult postVisitDirectory(java.nio.file.Path dir, IOException exc) throws IOException {
+				logger.info("Deleting dir: " + dir);
+				if (exc == null) { 
+					if(!dir.equals(basedir)){ // keep basedir
+						Files.delete(dir);
+					}
+					return FileVisitResult.CONTINUE;
+				} else {
+					throw exc;
+				}
+			}
+
+		});
+	}
+
 }

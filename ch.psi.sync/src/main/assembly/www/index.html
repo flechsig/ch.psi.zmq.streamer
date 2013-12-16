@@ -123,7 +123,7 @@ body {
 		// add information for
 		$.get(base+'/stream/'+stream, function(data) {
 			
-			$("#streaminfo").append("<h3>Details: "+stream+"</h3><pre>"+JSON.stringify(data, null, 4)+"</pre>");
+			$("#streaminfo").append("<h2>Details: "+stream+"</h2><pre>"+JSON.stringify(data, null, 4)+"</pre>");
 		}, 'json');
 	}
 	
@@ -165,6 +165,47 @@ body {
 			stream.close();
 		} catch (e) {
 		}
+	}
+	
+	function checkSpace(){
+		// add information for
+		$.get(base+'/basedir/space', function(data) {
+			
+			$("#freeSpace").empty();
+			$("#freeSpace").append(
+				'<div class="alert alert-warning alert-dismissable">'+
+				  '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+				  '<strong>Free Space: </strong>'+(data/1073741824).toFixed(2)+' GB'+
+				'</div>');
+			
+			
+		}, 'json');
+	}
+	
+	function checkFiles(){
+		$.get(base+'/basedir/files', function(data) {
+			
+			$("#fileList").empty();
+			
+			$("#fileList").append(
+					'<div class="alert alert-warning alert-dismissable">'+
+					  '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+					  '<strong>Files: </strong><br/>'+
+					  '<pre>'+JSON.stringify(data, null, 4)+'</pre>'+
+					  '<button class="btn" type="button" onclick="deleteFiles()">Delete Files &raquo;</button>'+
+					'</div>');
+			
+		}, 'json');
+	}
+	
+	function deleteFiles(){
+		$.ajax({
+		    url: base+'/basedir/files',
+		    type: 'DELETE',
+		    success: function(result) {
+		    	checkFiles();
+		    }
+		});
 	}
 	
 </script>
@@ -224,6 +265,27 @@ body {
 			</div>
 		</div>
 
+		<hr>
+		
+		<div class="row">
+			<div class="span10">
+				<div class="span10">
+					<h2>Utilities</h2>
+					<div class="span10">
+						<button id="checkSpaceBtn" class="btn" type="button" onclick="checkSpace()">Check Space &raquo;</button>
+						<div id="freeSpace"></div>
+					</div>
+					<div class="span10">
+						<hr>
+					</div>
+					<div class="span10">
+						<button id="checkFilesBtn" class="btn" type="button" onclick="checkFiles()">Check Files &raquo;</button>
+						<div id="fileList"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 		<hr>
 
 		<footer>
