@@ -53,12 +53,14 @@ public class FileSender {
 	private String header = "";
 	private boolean wipe = false;
 	private int count = 0;
+	private String method = "push/pull";
 	
 	private EventBus statusBus;
 	
-	public FileSender(EventBus statusBus, int port, long highWaterMark, boolean wipe){
+	public FileSender(EventBus statusBus, String method, int port, long highWaterMark, boolean wipe){
 		this.statusBus = statusBus;
 		
+		this.method = method;
 		this.port = port;
 		this.wipe = wipe;
 		this.highWaterMark=highWaterMark;
@@ -66,7 +68,14 @@ public class FileSender {
 	
 	public void start(){
 		context = ZMQ.context(1);
-		socket = context.socket(ZMQ.PUSH);
+		if(method.equals("pub/sub")){
+			logger.info("Setting up streamer with method: pub/sub");
+			socket = context.socket(ZMQ.PUB);
+		}
+		else{
+			logger.info("Setting up streamer with method: push/pull");
+			socket = context.socket(ZMQ.PUSH);
+		}
 		socket.setHWM(highWaterMark);
 		socket.bind("tcp://*:"+port);
 		

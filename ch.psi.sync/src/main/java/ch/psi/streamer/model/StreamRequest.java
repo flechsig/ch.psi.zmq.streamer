@@ -35,6 +35,8 @@ public class StreamRequest {
 	private long highWaterMark = 1000;
 	private boolean wipeFile = true;
 	
+	public String method = "push/pull";
+	
 	public List<StreamSource> getSource() {
 		return source;
 	}
@@ -64,5 +66,20 @@ public class StreamRequest {
 	}
 	public void setHeader(Map<String, String> header) {
 		this.header = header;
+	}
+	public String getMethod() {
+		return method;
+	}
+	public void setMethod(String method) {
+		method = method.toLowerCase();
+		if(method.equals("pub/sub")){
+			this.method = method;
+		}
+		else if (method.equals("push/pull")){
+			this.method = method;
+		}
+		else{
+			this.method = "push/pull";
+		}
 	}
 }

@@ -72,7 +72,7 @@ public class Stream {
 		
 		bus = new AsyncEventBus(Executors.newSingleThreadExecutor());
 		
-		sender = new FileSender(statusBus, request.getPort(), request.getHighWaterMark(), request.isWipeFile());
+		sender = new FileSender(statusBus, request.getMethod(), request.getPort(), request.getHighWaterMark(), request.isWipeFile());
 		
 		
 		

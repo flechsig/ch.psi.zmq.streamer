@@ -100,6 +100,7 @@ PUT stream/{id}
     
     "header":{},
 
+	"method":"push/pull",
     "port":8888,
     "wipeFile":"false"
     
@@ -108,6 +109,7 @@ PUT stream/{id}
 204 Stream created
 ```
 * All keys are optional except searchPath
+* Supported methods are `push/pull` and `pub/sub`
 
 
 Terminate stream
@@ -135,6 +137,7 @@ GET stream/{id}
         "numberOfImages": 0,
         "destinationPath": "",
         "header": null,
+        "method":"push/pull",
         "port": 8888,
         "highWaterMark": 1000,
         "wipeFile": true

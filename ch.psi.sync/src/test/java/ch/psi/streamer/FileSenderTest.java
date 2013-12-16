@@ -53,7 +53,7 @@ public class FileSenderTest {
 	@Test
 	public void test() {
 		EventBus bus = new EventBus();
-        final FileSender sender = new FileSender(new EventBus(), 9998, 100, false);
+        final FileSender sender = new FileSender(new EventBus(), "push/pull", 9998, 100, false);
         bus.register(sender);
         
         sender.start();

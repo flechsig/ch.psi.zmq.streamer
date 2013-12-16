@@ -45,7 +45,7 @@ public class FileReceiverTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		sender = new FileSender(new EventBus(), 8080, 100, false);
+		sender = new FileSender(new EventBus(), "push/pull", 8080, 100, false);
 		receiver = new FileReceiver("emac", 8080, "target");
 	}
 

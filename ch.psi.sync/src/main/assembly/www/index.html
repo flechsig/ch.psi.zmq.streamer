@@ -85,6 +85,10 @@ body {
 		if(value!=null && value!=''){
 			config.header=JSON.parse(value);
 		}
+		
+		value=$('#s_method').val();
+		config.method=value;
+		
 		value=$('#s_port').val();
 		if(value!=null && value!=''){
 			config.port=value;
@@ -243,9 +247,14 @@ body {
 					  <input class="span3" id="s_destinationPath" placeholder="Destination Path" type="text">
 					  <input class="span3" id="s_numberOfImages" placeholder="Number of Images" type="text">
 					  <input class="span3" id="s_header" placeholder="Header" type="text">
+					  <select class="span3" id="s_method">
+						  <option>push/pull</option>
+						  <option>pub/sub</option>
+						</select>
 					  <input class="span3" id="s_port" placeholder="Port" type="text">
 					  <input class="span3" id="s_highWaterMark" placeholder="High Water Mark" type="text">
 					  <input class="span3" id="s_wipe" placeholder="Wipe File" type="text">
+					  
 				</div>
 				
 				<div class="span2">
