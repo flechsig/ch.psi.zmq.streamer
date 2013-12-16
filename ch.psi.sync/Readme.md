@@ -94,7 +94,8 @@ PUT stream/{id}
 			"searchPath":"Desktop/test/one",
 			"searchPattern":"glob:*",
 			"destinationPath":"bli",
-			"numberOfImages":1
+			"numberOfImages":1,
+			"streamExsitingFiles":false
 		}
 	]
     
@@ -132,10 +133,13 @@ GET stream/{id}
         "sendCount": 0
     },
     "configuration": {
-        "searchPath": "/Users/ebner/Desktop/test",
-        "searchPattern": "glob:*",
-        "numberOfImages": 0,
-        "destinationPath": "",
+    	"source":[
+	        "searchPath": "/Users/ebner/Desktop/test",
+	        "searchPattern": "glob:*",
+	        "destinationPath": "",
+	        "numberOfImages": 0,
+	        "streamExsitingFiles":false
+        ]
         "header": null,
         "method":"push/pull",
         "port": 8888,
