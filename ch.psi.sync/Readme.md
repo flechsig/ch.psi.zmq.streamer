@@ -142,6 +142,32 @@ GET stream/{id}
 }
 ```
 
+Get exsiting files in the streamers basedir
+
+```
+GET basedir/files
+
+200
+[ fileA.cbf, fileB.cbf]
+```
+
+Delete exsiting files in the streamers basedir
+
+```
+DELETE basedir/files
+
+204
+```
+
+Get free space (in bytes) of the the streamers basedir directory
+
+```
+GET basedir/space
+
+200
+1234556
+```
+
 ### Command Line
 
 Create stream
