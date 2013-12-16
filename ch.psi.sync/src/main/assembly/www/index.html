@@ -79,7 +79,9 @@ body {
 			nimage=parseInt(value)
 		}
 		
-		config.source=[{"searchPath":spath, "searchPattern":spattern, "destinationPath":dpath, "numberOfImages":nimage}];
+		streamExisting=$('#s_streamExistingFiles').is(':checked');
+		
+		config.source=[{"searchPath":spath, "searchPattern":spattern, "destinationPath":dpath, "numberOfImages":nimage, "streamExistingFiles":streamExisting}];
 		
 		value=$('#s_header').val();
 		if(value!=null && value!=''){
@@ -88,6 +90,7 @@ body {
 		
 		value=$('#s_method').val();
 		config.method=value;
+		
 		
 		value=$('#s_port').val();
 		if(value!=null && value!=''){
@@ -246,6 +249,11 @@ body {
 					  <input class="span3" id="s_searchPattern" placeholder="Search Pattern" type="text">
 					  <input class="span3" id="s_destinationPath" placeholder="Destination Path" type="text">
 					  <input class="span3" id="s_numberOfImages" placeholder="Number of Images" type="text">
+					  <div class="checkbox">
+				        <label>
+				          <input type="checkbox" id="s_streamExistingFiles"> Stream Existing Files
+				        </label>
+				      </div>
 					  <input class="span3" id="s_header" placeholder="Header" type="text">
 					  <select class="span3" id="s_method">
 						  <option>push/pull</option>

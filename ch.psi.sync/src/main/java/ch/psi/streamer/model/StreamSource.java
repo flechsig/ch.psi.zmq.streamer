@@ -28,6 +28,8 @@ public class StreamSource {
 	private String destinationPath = "";
 	private int numberOfImages = 0;
 	
+	public boolean streamExistingFiles = false;
+	
 	public String getSearchPath() {
 		return searchPath;
 	}
@@ -51,5 +53,11 @@ public class StreamSource {
 	}
 	public void setNumberOfImages(int numberOfImages) {
 		this.numberOfImages = numberOfImages;
+	}
+	public boolean isStreamExistingFiles() {
+		return streamExistingFiles;
+	}
+	public void setStreamExistingFiles(boolean streamExistingFiles) {
+		this.streamExistingFiles = streamExistingFiles;
 	}
 }
