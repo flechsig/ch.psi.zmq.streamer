@@ -31,6 +31,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
+import ch.psi.streamer.model.StreamInfo;
 import ch.psi.streamer.model.StreamRequest;
 import ch.psi.streamer.model.StreamSource;
 import ch.psi.streamer.model.StreamStatus;
@@ -125,7 +126,7 @@ public class Stream {
 	/**
 	 * Stop datastream
 	 */
-	public void stop(){
+	public StreamInfo stop(){
 		logger.info("... terminate streaming");
 		
 		if(bus!=null && sender!=null && wdogs!=null){
@@ -137,11 +138,16 @@ public class Stream {
 			wdogExecutor.shutdown();
 		}
 		
+		StreamInfo info = new StreamInfo();
+		info.setConfiguration(getConfiguration());
+		info.setStatus(getStatus());
+		
 		bus= null;
 		sender=null;
 		wdogs = null;
 		
 		logger.info("Streaming terminated");
+		return info;
 	}
 	
 	public EventBus getStatusBus(){

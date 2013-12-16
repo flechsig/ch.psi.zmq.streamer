@@ -155,12 +155,12 @@ public class StreamService {
 	 */
 	@DELETE
 	@Path("stream/{trackingid}")
-	public void terminate(@PathParam("trackingid") String trackingid){
+	public StreamInfo terminate(@PathParam("trackingid") String trackingid){
 		Stream stream = streams.get(trackingid);
 		if(stream==null){
 			throw new NotFoundException();
 		}
-		stream.stop();
+		StreamInfo info = stream.stop();
 		streams.remove(trackingid);
 		
 		// Broadcast new stream list
@@ -170,6 +170,8 @@ public class StreamService {
             .data(List.class, getStreams())
             .build();
         broadcaster.broadcast(event);
+        
+        return info;
 	}
 	
 	@GET
