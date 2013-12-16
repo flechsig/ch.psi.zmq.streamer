@@ -17,6 +17,7 @@ public class StreamServerResourceBinder extends AbstractBinder {
 		bind(config).to(StreamServerConfiguration.class);
 		bind(new StreamMap()).to(StreamMap.class);
 		bind(new SseBroadcaster()).to(SseBroadcaster.class);
+		bind(new Accountant()).to(Accountant.class);
 	}
 
 }

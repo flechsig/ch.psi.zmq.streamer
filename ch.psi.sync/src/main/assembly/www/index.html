@@ -215,6 +215,27 @@ body {
 		});
 	}
 	
+	function accounting(){
+		$.get(base+'/accounting', function(data) {
+
+			
+			
+			infotext = '<div class="alert alert-warning alert-dismissable">'+
+			  '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+			  '<strong>Closed Streams: </strong><br/>'+
+			  '<hr>';
+			
+			for(i in data){
+				infotext = infotext+'<p><strong>'+data[i].trackingId+'</strong>: '+data[i].status.sendCount+' messages sent</p>';
+			}  
+			infotext = infotext+'</div>';
+			
+			$("#accoutingInfo").empty();
+			$("#accoutingInfo").append(infotext);
+			
+		}, 'json');
+	}
+	
 </script>
 </head>
 <body>
@@ -298,6 +319,13 @@ body {
 					<div class="span10">
 						<button id="checkFilesBtn" class="btn" type="button" onclick="checkFiles()">Check Files &raquo;</button>
 						<div id="fileList"></div>
+					</div>
+					<div class="span10">
+						<hr>
+					</div>
+					<div class="span10">
+						<button id="checkFilesBtn" class="btn" type="button" onclick="accounting()">Accounting &raquo;</button>
+						<div id="accoutingInfo"></div>
 					</div>
 				</div>
 			</div>

@@ -46,6 +46,7 @@ import org.glassfish.jersey.media.sse.SseFeature;
 import com.google.common.eventbus.Subscribe;
 
 import ch.psi.streamer.model.SendCount;
+import ch.psi.streamer.model.StreamAccounting;
 import ch.psi.streamer.model.StreamInfo;
 import ch.psi.streamer.model.StreamRequest;
 import ch.psi.streamer.model.StreamSource;
@@ -63,6 +64,9 @@ public class StreamService {
 	
 	@Inject
 	private SseBroadcaster broadcaster;
+	
+	@Inject
+	private Accountant accountant;
 	
 	@GET
     @Path("version")
@@ -171,6 +175,13 @@ public class StreamService {
             .build();
         broadcaster.broadcast(event);
         
+        // Add stream info for accounting reasons
+        StreamAccounting a = new StreamAccounting();
+        a.setTrackingId(trackingid);
+        a.setConfiguration(info.getConfiguration());
+        a.setStatus(info.getStatus());
+        accountant.add(a);
+        
         return info;
 	}
 	
@@ -248,6 +259,12 @@ public class StreamService {
 			}
 
 		});
+	}
+	
+	@GET
+	@Path("accounting")
+	public List<StreamAccounting> accounting(){
+		return(accountant.getInformation());
 	}
 
 }

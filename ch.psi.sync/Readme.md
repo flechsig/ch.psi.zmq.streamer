@@ -118,8 +118,31 @@ Terminate stream
 ```
 DELETE stream/{id}
 
-200 - Success
+200 - 
+{
+    "status": {
+        "sendCount": 4
+    },
+    "configuration": {
+        "source": [
+            {
+                "searchPath": "test",
+                "searchPattern": "glob:*",
+                "destinationPath": "",
+                "numberOfImages": 0,
+                "streamExistingFiles": true
+            }
+        ],
+        "header": null,
+        "port": 8888,
+        "highWaterMark": 1000,
+        "wipeFile": true,
+        "method": "pub/sub"
+    }
+}
 ```
+ * Returns status information of the stream, i.e. number of images transmitted, ...
+
 
 Get Stream information/status
 
@@ -127,7 +150,7 @@ Get Stream information/status
 GET stream/{id}
 
 404 Not found - If stream does not exist (anymore)
-200 
+200 -
 {
     "status": {
         "sendCount": 0
@@ -171,9 +194,44 @@ Get free space (in bytes) of the the streamers basedir directory
 ```
 GET basedir/space
 
-200
+200 - 
 1234556
 ```
+
+Get accounting for last 10 streams (active streams are not included in the list)
+
+```
+GET accounting
+
+200 - 
+[
+    {
+        "status": {
+            "sendCount": 0
+        },
+        "configuration": {
+            "source": [
+                {
+                    "searchPath": "",
+                    "searchPattern": "glob:*",
+                    "destinationPath": "",
+                    "numberOfImages": 0,
+                    "streamExistingFiles": false
+                }
+            ],
+            "header": null,
+            "port": 8888,
+            "highWaterMark": 1000,
+            "wipeFile": true,
+            "method": "push/pull"
+        },
+        "trackingId": "four"
+    }
+]
+```
+ * The first element holds the most recently closed stream, the last the most passed closed stream
+ 
+
 
 ### Command Line
 
