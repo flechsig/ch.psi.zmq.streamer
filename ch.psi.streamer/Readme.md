@@ -286,11 +286,22 @@ Register Init Script
 ```
 cp latest/var/streamer /etc/init.d/
 chmod 755 /etc/init.d/streamer
+```
+
+On RHEL Linux
+
+```
 chkconfig --add streamer
 chkconfig streamer on
 ```
 
-Start/Stop Escape Service
+On Ubuntu Linux
+
+```
+update-rc.d streamer defaults
+```
+
+Start/Stop Streamer Service
 
 ```
 service streamer start

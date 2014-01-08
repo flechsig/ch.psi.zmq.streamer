@@ -1,5 +1,7 @@
 #!/bin/sh
 #
+
+# For RHEL Linux systems
 # streamer          Start/Stop sync
 #
 # chkconfig: 35 98 10
@@ -7,6 +9,20 @@
 # processname: streamer
 # config:
 # pidfile: /var/run/streamer.pid
+
+# For Ubuntu Linux systems
+### BEGIN INIT INFO
+# Provides:          streamer
+# Required-Start:    $local_fs $network
+# Required-Stop:     $local_fs $network
+# Should-Start:      $named
+# Should-Stop:       $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start ZMQ streamer
+# Description:       Start the streamer service to stream images via ZMQ
+### END INIT INFO
+
 
 # Use Java 7
 PATH=/opt/jre/bin:$PATH
@@ -23,7 +39,7 @@ chown $USER $LOGFILE
 
 case "$1" in
 start)
-  $SU "PATH=/opt/jre/bin:$PATH $HOME/latest/bin/streamer -p 8080 > $LOGFILE 2>&1 &"
+  $SU "PATH=/opt/jre/bin:$PATH $HOME/latest/bin/streamer -d /dev/shm -p 8080 > $LOGFILE 2>&1 &"
   ;;
 stop)
   $SU "pkill -f 'java .* $HOME' >> $LOGFILE 2>&1 &"
