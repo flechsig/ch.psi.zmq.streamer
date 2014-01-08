@@ -85,10 +85,13 @@ public class FileSender {
 	@Subscribe
 	public void onFile(DetectedFile dfile){
 		Path file = dfile.getPath();
-		logger.info("Sending file: "+file);
 		// We add the (additional) header information first in case it also specifies a standard header key
 		// We do so because in JSON if 2 keys are same in a map the last one wins
-		socket.sendMore("{"+header+"\"filename\":\""+file.getFileName()+"\",\"path\":\""+dfile.getDestination()+"\",\"htype\":\"pilatus-1.0\"}");
+		final String headerString = "{"+header+"\"filename\":\""+file.getFileName()+"\",\"path\":\""+dfile.getDestination()+"\",\"htype\":\"pilatus-1.0\"}";
+
+		logger.info("Sending file: "+file+" header: "+headerString);
+		
+		socket.sendMore(headerString);
 		try {
 			socket.send(Files.readAllBytes(file));
 			count++;
