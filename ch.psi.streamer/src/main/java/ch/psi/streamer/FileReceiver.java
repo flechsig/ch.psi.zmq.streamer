@@ -80,7 +80,6 @@ public class FileReceiver {
 		receive = true;
 		context = ZMQ.context(1);
 		socket = context.socket(ZMQ.PULL);
-		socket.setRcvHWM(1);
 		socket.connect("tcp://"+hostname+":"+port);
 		
 		ObjectMapper mapper = new ObjectMapper();
@@ -101,7 +100,7 @@ public class FileReceiver {
 				if (socket.hasReceiveMore()) {
 					content = socket.recv();
 				}
-				logger.info(new String(message));
+				logger.info("Message received: "+ new String(message));
 				
 				Map<String,Object> h = mapper.readValue(message, typeRef);
 				
