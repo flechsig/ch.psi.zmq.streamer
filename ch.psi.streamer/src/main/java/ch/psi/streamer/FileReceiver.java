@@ -64,6 +64,7 @@ public class FileReceiver {
 	private int port;
 	private String basedir;
 	private volatile boolean receive = true;
+	private volatile int counter = 0;
 	
 	public FileReceiver(String hostname, int port, String basedir){
 		this.hostname = hostname;
@@ -75,9 +76,11 @@ public class FileReceiver {
 	 * Receive ZMQ messages with pilatus-1.0 header type and write the data part to disk
 	 */
 	public void receive(){
+		counter = 0;
 		receive = true;
 		context = ZMQ.context(1);
 		socket = context.socket(ZMQ.PULL);
+		socket.setRcvHWM(1);
 		socket.connect("tcp://"+hostname+":"+port);
 		
 		ObjectMapper mapper = new ObjectMapper();
@@ -130,6 +133,7 @@ public class FileReceiver {
 			        Files.setPosixFilePermissions(file.toPath(), perms);
 				}
 				
+				counter++;
 			} catch (IOException e) {
 				logger.log(Level.SEVERE,"",e);
 			}
@@ -141,6 +145,12 @@ public class FileReceiver {
 	public void terminate(){
 		receive=false;
 	}
+	
+	public int getMessagesReceived(){
+		return counter;
+	}
+	
+	
 	
 
 	public static void main(String[] args) {
@@ -217,5 +227,4 @@ public class FileReceiver {
 			}
 		});
 	}
-
 }

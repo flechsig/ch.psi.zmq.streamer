@@ -155,7 +155,7 @@ public class Stream {
 	}
 	
 	public StreamStatus getStatus(){
-		return new StreamStatus(sender.getCount());
+		return new StreamStatus(sender.getMessagesSent());
 	}
 	
 	public StreamRequest getConfiguration(){

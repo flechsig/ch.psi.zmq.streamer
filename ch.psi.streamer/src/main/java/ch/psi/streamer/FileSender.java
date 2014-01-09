@@ -115,7 +115,7 @@ public class FileSender {
 	/**
 	 * @return Number of messages/files send
 	 */
-	public int getCount() {
+	public int getMessagesSent() {
 		return count;
 	}
 	public String getHeader() {

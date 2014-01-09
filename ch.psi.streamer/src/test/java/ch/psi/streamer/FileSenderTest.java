@@ -19,46 +19,67 @@
 package ch.psi.streamer;
 
 import java.nio.file.FileSystems;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.psi.streamer.FileSender;
 
+import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 
-/**
- * @author ebner
- *
- */
 public class FileSenderTest {
+	
+	private static final Logger logger = Logger.getLogger(FileSenderTest.class.getName());
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception {
 	}
 
-	@Ignore
 	@Test
-	public void test() {
-		EventBus bus = new EventBus();
+	public void test() throws InterruptedException {
+		EventBus bus = new AsyncEventBus(Executors.newSingleThreadExecutor());
         final FileSender sender = new FileSender(new EventBus(), "push/pull", 9998, 100, false);
         bus.register(sender);
         
         sender.start();
         
-        bus.post(FileSystems.getDefault().getPath(".","a.txt"));
+        
+        
+
+        final FileReceiver receiver = new FileReceiver("emac", 9998, "target");
+        Thread t = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				receiver.receive();
+			}
+		});
+        t.start();
+        
+        for(int i=0;i<10;i++){
+        	bus.post(new DetectedFile(FileSystems.getDefault().getPath("src/test/resources","testfile.png"), String.format("path%d",i)));
+        }
+        
+        Thread.sleep(100); // race condition
+        
+        sender.terminate();
+        
+        receiver.terminate();
+        
+        logger.info("Messages sent: "+sender.getMessagesSent());
+        logger.info("Messages received: "+receiver.getMessagesReceived());
+        
+        if(sender.getMessagesSent()!=receiver.getMessagesReceived()){
+        	
+        }
 	}
 
 }
