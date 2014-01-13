@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jeromq.ZMQ;
+import org.zeromq.ZMQ;
 
 import ch.psi.streamer.model.SendCount;
 
@@ -105,8 +105,9 @@ public class FileSender {
 	}
 	
 	public void terminate(){
+		logger.info("Terminate sender socket");
 		socket.close();
-		context.term();
+		context.close();
 	}
 
 	public boolean isWipe() {

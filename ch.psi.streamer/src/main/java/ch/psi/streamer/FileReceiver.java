@@ -41,7 +41,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-import org.jeromq.ZMQ;
+import org.zeromq.ZMQ;
 
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
@@ -72,10 +72,15 @@ public class FileReceiver {
 		this.basedir = basedir;
 	}
 	
+	
+	public void receive(){
+		receive(null);
+	}
+	
 	/**
 	 * Receive ZMQ messages with pilatus-1.0 header type and write the data part to disk
 	 */
-	public void receive(){
+	public void receive(Integer numImages){
 		counter = 0;
 		receive = true;
 		context = ZMQ.context(1);
@@ -133,12 +138,17 @@ public class FileReceiver {
 				}
 				
 				counter++;
+				if(numImages!=null&& numImages==counter){
+					break;
+				}
 			} catch (IOException e) {
 				logger.log(Level.SEVERE,"",e);
 			}
 		}
+		
+		logger.info("Close receiver socket");
 		socket.close();
-		context.term();
+		context.close();
 	}
 	
 	public void terminate(){
