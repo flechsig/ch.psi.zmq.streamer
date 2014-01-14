@@ -112,16 +112,7 @@ public class StreamService {
 			public void onSend(SendCount status){
 				if(fcounter>0 && status.getCount()==fcounter){
 					logger.info("Reached image "+status.getCount()+" of "+fcounter+". Stopping streaming");
-					stream.stop();
-					streams.remove(trackingid);
-					
-					// Broadcast new stream list
-					OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
-			        OutboundEvent event = eventBuilder.name("stream")
-			            .mediaType(MediaType.APPLICATION_JSON_TYPE)
-			            .data(List.class, getStreams())
-			            .build();
-			        broadcaster.broadcast(event);
+					terminate(trackingid);
 				}
 			}
 		});
