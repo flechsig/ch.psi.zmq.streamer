@@ -184,7 +184,7 @@ public class StreamService {
 	
 	
 	@GET
-    @Path("stream")
+    @Path("events")
     @Produces(SseFeature.SERVER_SENT_EVENTS)
     public EventOutput subscribe() {
         EventOutput eventOutput = new EventOutput();

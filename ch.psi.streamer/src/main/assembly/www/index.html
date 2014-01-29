@@ -159,7 +159,7 @@ body {
 	var stream
 	function connectStream() {
 		closeStream();
-		stream = new EventSource(base + '/stream');
+		stream = new EventSource(base + '/events');
 		stream.addEventListener('stream', function(event) {
 			jdata = JSON.parse(event.data)
 			updateStreams(jdata);
