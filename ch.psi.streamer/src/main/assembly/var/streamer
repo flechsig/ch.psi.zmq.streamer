@@ -44,6 +44,10 @@ start)
 stop)
   $SU "pkill -f 'java .* $HOME' >> $LOGFILE 2>&1 &"
   ;;
-\*)
-  echo "usage: $0 (start|stop|help)"
+restart)
+  $0 stop
+  $0 start
+  ;;
+*)
+  echo "usage: $0 (start|stop|restart|help)"
 esac
