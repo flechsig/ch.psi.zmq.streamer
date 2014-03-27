@@ -16,7 +16,7 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer;
+package ch.psi.zmq.streamer;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -30,7 +30,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.psi.streamer.DirectoryWatchDog;
+import ch.psi.zmq.streamer.DirectoryWatchDog;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;

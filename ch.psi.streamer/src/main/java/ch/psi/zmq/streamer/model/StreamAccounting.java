@@ -16,27 +16,19 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer;
+package ch.psi.zmq.streamer.model;
 
-import java.util.LinkedList;
-import java.util.List;
+/**
+ * 
+ */
+public class StreamAccounting extends StreamInfo {
+	private String trackingId;
 
-import ch.psi.streamer.model.StreamAccounting;
-
-public class Accountant {
-	
-	private final int size = 10;
-	private final LinkedList<StreamAccounting> queue = new LinkedList<>();
-	
-	public void add(StreamAccounting info){
-		queue.addFirst(info);
-		if(queue.size()>size){
-			queue.removeLast(); // remove head
-		}
-	}
-	
-	public List<StreamAccounting> getInformation(){
-		return (List<StreamAccounting>) queue;
+	public String getTrackingId() {
+		return trackingId;
 	}
 
+	public void setTrackingId(String trackingId) {
+		this.trackingId = trackingId;
+	}
 }

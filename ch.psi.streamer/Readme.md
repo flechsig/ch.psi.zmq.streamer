@@ -36,7 +36,7 @@ Usage: streamer
 Streamer comes with a web UI. One can use this UI to list and manage current streams.
 The web UI is accessible on `http://<host>:8080/static/` . Note: It is important to have the last / inside the url!
 
-![Screenshot](ch.psi.streamer/screenshot.png?raw) 
+![Screenshot](ch.psi.zmq.streamer/screenshot.png?raw) 
 
 
 # Development
@@ -277,8 +277,8 @@ Extract zip file
 ```
 mkdir /opt/streamer
 cd /opt/streamer
-unzip ch.psi.streamer-<version>-bin.zip
-ln -s ch.psi.streamer-<version> latest
+unzip ch.psi.zmq.streamer-<version>-bin.zip
+ln -s ch.psi.zmq.streamer-<version> latest
 ```
 
 Register Init Script

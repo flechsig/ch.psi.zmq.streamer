@@ -1,4 +1,4 @@
-package ch.psi.streamer;
+package ch.psi.zmq.streamer;
 
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;

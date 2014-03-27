@@ -16,26 +16,24 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer.model;
+package ch.psi.zmq.streamer.model;
 
-/**
- * 
- */
-public class StreamInfo {
+public class StreamStatus {
 	
-	private StreamStatus status;
-	private StreamRequest configuration;
+	private int sendCount;
+
+	public StreamStatus(){
+	}
 	
-	public StreamStatus getStatus() {
-		return status;
+	public StreamStatus(int sendCount){
+		this.sendCount = sendCount;
 	}
-	public void setStatus(StreamStatus status) {
-		this.status = status;
+	
+	public int getSendCount() {
+		return sendCount;
 	}
-	public StreamRequest getConfiguration() {
-		return configuration;
+	public void setSendCount(int sendCount) {
+		this.sendCount = sendCount;
 	}
-	public void setConfiguration(StreamRequest configuration) {
-		this.configuration = configuration;
-	}
+	
 }

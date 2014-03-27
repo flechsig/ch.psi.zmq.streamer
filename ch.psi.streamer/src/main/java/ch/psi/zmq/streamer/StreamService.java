@@ -16,7 +16,7 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer;
+package ch.psi.zmq.streamer;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,11 +45,11 @@ import org.glassfish.jersey.media.sse.SseFeature;
 
 import com.google.common.eventbus.Subscribe;
 
-import ch.psi.streamer.model.SendCount;
-import ch.psi.streamer.model.StreamAccounting;
-import ch.psi.streamer.model.StreamInfo;
-import ch.psi.streamer.model.StreamRequest;
-import ch.psi.streamer.model.StreamSource;
+import ch.psi.zmq.streamer.model.SendCount;
+import ch.psi.zmq.streamer.model.StreamAccounting;
+import ch.psi.zmq.streamer.model.StreamInfo;
+import ch.psi.zmq.streamer.model.StreamRequest;
+import ch.psi.zmq.streamer.model.StreamSource;
 
 @Path("/")
 public class StreamService {

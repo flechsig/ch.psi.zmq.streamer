@@ -16,7 +16,7 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer;
+package ch.psi.zmq.streamer;
 
 import java.nio.file.FileSystems;
 import java.util.Timer;
@@ -29,8 +29,9 @@ import org.junit.Test;
 
 import com.google.common.eventbus.EventBus;
 
-import ch.psi.streamer.FileReceiver;
-import ch.psi.streamer.FileSender;
+import ch.psi.zmq.streamer.DetectedFile;
+import ch.psi.zmq.streamer.FileReceiver;
+import ch.psi.zmq.streamer.FileSender;
 
 /**
  * @author ebner

@@ -16,24 +16,27 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer.model;
+package ch.psi.zmq.streamer;
 
-public class StreamStatus {
-	
-	private int sendCount;
+import java.nio.file.Path;
 
-	public StreamStatus(){
+/**
+ * 
+ */
+public class DetectedFile {
+	private final Path path;
+	private final String destination;
+	
+	public DetectedFile(Path path, String destination) {
+		this.path = path;
+		this.destination = destination;
 	}
 	
-	public StreamStatus(int sendCount){
-		this.sendCount = sendCount;
+	public Path getPath() {
+		return path;
 	}
-	
-	public int getSendCount() {
-		return sendCount;
-	}
-	public void setSendCount(int sendCount) {
-		this.sendCount = sendCount;
+	public String getDestination() {
+		return destination;
 	}
 	
 }

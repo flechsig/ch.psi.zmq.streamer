@@ -1,4 +1,4 @@
-package ch.psi.streamer;
+package ch.psi.zmq.streamer;
 import java.io.IOException;
 import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileSystems;

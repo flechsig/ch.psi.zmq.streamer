@@ -16,7 +16,7 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer.model;
+package ch.psi.zmq.streamer.model;
 
 import java.util.List;
 import java.util.Map;

@@ -16,7 +16,7 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer;
+package ch.psi.zmq.streamer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 import org.zeromq.ZMQ;
 
-import ch.psi.streamer.model.SendCount;
+import ch.psi.zmq.streamer.model.SendCount;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;

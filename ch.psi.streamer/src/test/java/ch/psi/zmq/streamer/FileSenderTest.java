@@ -16,7 +16,7 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer;
+package ch.psi.zmq.streamer;
 
 import java.nio.file.FileSystems;
 import java.util.concurrent.Executors;
@@ -28,7 +28,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import ch.psi.streamer.FileSender;
+import ch.psi.zmq.streamer.DetectedFile;
+import ch.psi.zmq.streamer.FileReceiver;
+import ch.psi.zmq.streamer.FileSender;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;

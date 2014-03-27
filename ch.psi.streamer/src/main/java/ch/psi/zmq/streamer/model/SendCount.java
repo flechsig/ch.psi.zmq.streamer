@@ -16,10 +16,17 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer;
+package ch.psi.zmq.streamer.model;
 
-import java.util.HashMap;
 
-public class StreamMap extends HashMap<String, Stream> {
-	private static final long serialVersionUID = 1L;
+public class SendCount {
+	private final int count;
+
+	public SendCount(int count) {
+		this.count=count;
+	}
+
+	public int getCount() {
+		return count;
+	}
 }

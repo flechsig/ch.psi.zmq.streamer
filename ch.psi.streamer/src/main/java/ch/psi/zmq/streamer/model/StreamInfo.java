@@ -16,19 +16,26 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer.model;
+package ch.psi.zmq.streamer.model;
 
 /**
  * 
  */
-public class StreamAccounting extends StreamInfo {
-	private String trackingId;
-
-	public String getTrackingId() {
-		return trackingId;
+public class StreamInfo {
+	
+	private StreamStatus status;
+	private StreamRequest configuration;
+	
+	public StreamStatus getStatus() {
+		return status;
 	}
-
-	public void setTrackingId(String trackingId) {
-		this.trackingId = trackingId;
+	public void setStatus(StreamStatus status) {
+		this.status = status;
+	}
+	public StreamRequest getConfiguration() {
+		return configuration;
+	}
+	public void setConfiguration(StreamRequest configuration) {
+		this.configuration = configuration;
 	}
 }

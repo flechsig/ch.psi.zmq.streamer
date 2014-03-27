@@ -16,7 +16,7 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer;
+package ch.psi.zmq.streamer;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -31,10 +31,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-import ch.psi.streamer.model.StreamInfo;
-import ch.psi.streamer.model.StreamRequest;
-import ch.psi.streamer.model.StreamSource;
-import ch.psi.streamer.model.StreamStatus;
+import ch.psi.zmq.streamer.model.StreamInfo;
+import ch.psi.zmq.streamer.model.StreamRequest;
+import ch.psi.zmq.streamer.model.StreamSource;
+import ch.psi.zmq.streamer.model.StreamStatus;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;

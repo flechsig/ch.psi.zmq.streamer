@@ -39,4 +39,4 @@ done
 
 STREAMER_BASE=$BASEDIR/../
 export STREAMER_BASE
-java $VM_ARGUMENTS -cp $CLASSPATH ch.psi.streamer.StreamServer $ARGUMENTS
+java $VM_ARGUMENTS -cp $CLASSPATH ch.psi.zmq.streamer.StreamServer $ARGUMENTS

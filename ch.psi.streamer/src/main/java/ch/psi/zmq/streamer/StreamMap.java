@@ -16,27 +16,10 @@
  * along with this code. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package ch.psi.streamer;
+package ch.psi.zmq.streamer;
 
-import java.nio.file.Path;
+import java.util.HashMap;
 
-/**
- * 
- */
-public class DetectedFile {
-	private final Path path;
-	private final String destination;
-	
-	public DetectedFile(Path path, String destination) {
-		this.path = path;
-		this.destination = destination;
-	}
-	
-	public Path getPath() {
-		return path;
-	}
-	public String getDestination() {
-		return destination;
-	}
-	
+public class StreamMap extends HashMap<String, Stream> {
+	private static final long serialVersionUID = 1L;
 }
