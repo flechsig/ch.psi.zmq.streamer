@@ -7,12 +7,15 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.List;
 
+/**
+ * This is/was a test to test the capabilities of the NIO2 API.
+ */
 public class TestWatch {
 
     public static void main(String[] args) {
 
         //define a folder root
-        Path myDir = Paths.get("/Volumes/ramdisk/");       
+        Path myDir = Paths.get("target");       
 
         try {
            WatchService watcher = myDir.getFileSystem().newWatchService();

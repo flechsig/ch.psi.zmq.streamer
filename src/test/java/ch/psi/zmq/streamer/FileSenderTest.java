@@ -22,10 +22,7 @@ import java.nio.file.FileSystems;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.psi.zmq.streamer.DetectedFile;
@@ -38,16 +35,7 @@ import com.google.common.eventbus.EventBus;
 public class FileSenderTest {
 	
 	private static final Logger logger = Logger.getLogger(FileSenderTest.class.getName());
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
-	@Ignore
+	
 	@Test
 	public void test() throws InterruptedException {
 		
@@ -57,7 +45,7 @@ public class FileSenderTest {
         
         sender.start();
         
-        final FileReceiver receiver = new FileReceiver("emac", 9998, "target");
+        final FileReceiver receiver = new FileReceiver("localhost", 9998, "target");
         Thread t = new Thread(new Runnable() {
 			
 			@Override

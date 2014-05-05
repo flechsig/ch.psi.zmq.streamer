@@ -26,8 +26,7 @@ import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ch.psi.zmq.streamer.DirectoryWatchDog;
@@ -36,33 +35,16 @@ import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-/**
- * @author ebner
- * 
- */
 public class DirectoryWatchDogTest {
 
 	private static final Logger logger = Logger.getLogger(DirectoryWatchDogTest.class.getName());
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
-
+	@Ignore
 	@Test
 	public void test() throws IOException, InterruptedException {
 
 		// String directory = ".";
-		String directory = "/Users/ebner/Desktop";
+		String directory = "target";
 		String pattern = "glob:*";
 
 		logger.info("Watching '" + directory + "' for file pattern '" + pattern + "'");

@@ -23,7 +23,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,10 +32,6 @@ import ch.psi.zmq.streamer.DetectedFile;
 import ch.psi.zmq.streamer.FileReceiver;
 import ch.psi.zmq.streamer.FileSender;
 
-/**
- * @author ebner
- *
- */
 public class FileReceiverTest {
 	
 	private static final Logger logger = Logger.getLogger(FileReceiverTest.class.getName());
@@ -46,12 +41,8 @@ public class FileReceiverTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		sender = new FileSender(new EventBus(), "push/pull", 8080, 100, false);
-		receiver = new FileReceiver("emac", 8080, "target");
-	}
-
-	@After
-	public void tearDown() throws Exception {
+		sender = new FileSender(new EventBus(), "push/pull", 8888, 100, false);
+		receiver = new FileReceiver("localhost", 8888, "target");
 	}
 
 	@Test
@@ -60,7 +51,6 @@ public class FileReceiverTest {
 			
 			@Override
 			public void run() {
-				System.out.println("re");
 				sender.start();
 				sender.onFile(new DetectedFile(FileSystems.getDefault().getPath("src/test/resources/testfile.png"),""));
 				sender.terminate();
