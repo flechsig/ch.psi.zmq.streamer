@@ -61,12 +61,10 @@ public class FileSenderTest {
         
         Thread.sleep(400); // race condition
         
-        
+        sender.terminate();
         
         logger.info("Messages sent: "+sender.getMessagesSent());
         logger.info("Messages received: "+receiver.getMessagesReceived());
-        
-        sender.terminate();
         
         // Checks
        	Assert.assertTrue("Messages sent do not correspond to messages received", sender.getMessagesSent() == receiver.getMessagesReceived());
