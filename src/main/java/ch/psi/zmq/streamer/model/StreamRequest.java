@@ -21,10 +21,6 @@ package ch.psi.zmq.streamer.model;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author ebner
- *
- */
 public class StreamRequest {
 	
 	private List<StreamSource> source;
