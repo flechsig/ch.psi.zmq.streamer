@@ -59,15 +59,19 @@ public class FileSenderTest {
         	bus.post(new DetectedFile(FileSystems.getDefault().getPath("src/test/resources","testfile.png"), String.format("testfiles/f%d",i)));
         }
         
-        Thread.sleep(200); // race condition
+        Thread.sleep(400); // race condition
         
-        sender.terminate();
+        
         
         logger.info("Messages sent: "+sender.getMessagesSent());
         logger.info("Messages received: "+receiver.getMessagesReceived());
         
+        sender.terminate();
+        
         // Checks
        	Assert.assertTrue("Messages sent do not correspond to messages received", sender.getMessagesSent() == receiver.getMessagesReceived());
+       	
+       	
 	}
 
 }
